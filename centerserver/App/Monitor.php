@@ -8,6 +8,7 @@ namespace App;
 use Lib;
 use model\Device as DbDevice;
 use Lib\Monitor as Mon;
+use think\Db;
 class Monitor {
 
 	/**
@@ -48,7 +49,7 @@ class Monitor {
 	public static function getMonitors($gets = [], $page = 1, $pagesize = 10) {
 		// $list = DbDevice::getAllDevices();
 		echo '----------------monitor table'.PHP_EOL;
-		$list = DbDevice::getOneColumns([],['c_deviceid','c_devicesn','c_status','c_type']);
+		$list = DbDevice::getInstance()->getOneColumns([],['c_deviceid','c_devicesn','c_status','c_type']);
 		foreach ($list as $k => $task) {
 			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
 			$monitor = Lib\Monitor::$table->get($task['c_devicesn']);
@@ -77,13 +78,13 @@ class Monitor {
 		if (empty($data)) {
 			return false;
 		}
-		$id = DbDevice::insertDevice($data);
+		$id = DbDevice::getInstance()->insertDevice($data);
 		if ($id) {
 			//重新加载代理
 			if (Lib\Robot::$aTable->set($id, ["devicesn" => $data['c_devicesn']])) {
 				return $id;
 			} else {
-				db('Device')->delete($id);
+				Db::table('t_device')->delete($id);
 				return false;
 			}
 
@@ -102,7 +103,7 @@ class Monitor {
 		if (empty($id)) {
 			return false;
 		}
-		$status = db('Device')->where(['c_deviceid' => $id])->value('c_status');
+		$status = Db::table('t_device')->where(['c_deviceid' => $id])->value('c_status');
 		if ($status == 0) {
 			$data['c_status'] = 1;
 			$res = Lib\Robot::stopAgent($id);
@@ -111,7 +112,7 @@ class Monitor {
 			$res = Lib\Robot::startAgent($id);
 		}
 		$data['c_deviceid'] = $id;
-		$res1 = DbDevice::updateDevice($data);
+		$res1 = DbDevice::getInstance()->updateDevice($data);
 		if ($res && $res1) {
 			return true;
 		}
@@ -128,7 +129,7 @@ class Monitor {
 			return false;
 		}
 		$res = Lib\Robot::delAgent($id);
-		$res1 = db('Device')->delete($id);
+		$res1 = Db::table('t_device')->delete($id);
 		if ($res && $res1) {
 			return true;
 		}

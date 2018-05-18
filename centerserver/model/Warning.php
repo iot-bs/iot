@@ -7,11 +7,17 @@
  */
 
 namespace model;
-use \think\Model;
+use think\Db;
 
-class Warning extends Model
+class Warning
 {
+    public $table;
     public static $_instance = null;
+    public function __construct()
+    {
+        $this->table = Db::table('t_warning');
+    }
+
     /**
      * 单例模式
      */
@@ -59,7 +65,7 @@ class Warning extends Model
                 break;
         }
         $save['c_time'] = time();
-        $res = $this->save($save);
+        $res = $this->table->insert($save);
         return $res;
     }
 }

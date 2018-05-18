@@ -1,38 +1,49 @@
 <?php
 namespace model;
-class Device {
-	/**
-	 * @Author   liuxiaodong
-	 * @DateTime 2018-04-09
-	 * @return   [type]      [封装的device数据库类]
-	 */
-	protected static $device;
-	public static function getInstance() {
-		self::$device = new self();
-		return self::$device;
+use think\Db;
+class Device
+{
+    public $table;
+    /**
+     * @var null 单例模式
+     */
+    private static $_instance = null;
+    public function __construct()
+    {
+        $this->table = Db::table('t_device');
+    }
 
-	}
+    /**
+     * 单例模式
+     */
+    public static function getInstance()
+    {
+        if(empty(self::$_instance)){
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 	/**
 	 * @param    [type]      $where [where condition]
 	 * @return   [type]             [return all list]
 	 */
-	public static function getAllDevices($where = []) {
-		return db('Device')->where($where)->select();
+	public function getAllDevices($where = []) {
+		return $this->table->where($where)->select();
 	}
-	public static function getOneColumns($where = [], $column = []){
-		return db('Device')->where($where)->column($column);
+	public function getOneColumns($where = [], $column = ''){
+		return $this->table->where($where)->column($column);
 	}
 	/**
 	 * @param    [type]      $where [condition]
 	 * @return   [type]             [return one res]
 	 */
-	public static function getOneDevice($where) {
-		return db('Device')->where($where)->find();
+	public function getOneDevice($where) {
+		return $this->table->where($where)->find();
 	}
-	public static function updateDevice($data) {
-		return db('Device')->update($data);
+	public function updateDevice($data) {
+		return $this->table->update($data);
 	}
-	public static function insertDevice($data){
-		return db('Device')->insertGetId($data);
+	public function insertDevice($data){
+		return $this->table->insertGetId($data);
 	}
 }

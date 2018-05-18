@@ -12,6 +12,7 @@ use Lib\Tasks;
 use Lib\Robot;
 use Lib\Client;
 use Lib\Util;
+use think\Db;
 class Control {
 
 	/**
@@ -52,7 +53,7 @@ class Control {
 	public static function getControls($gets = [], $page = 1, $pagesize = 10) {
 		// $list = DbDevice::getAllDevices();
 		echo '----------------Control table'.PHP_EOL;
-		$list = DbDevice::getOneColumns([],['c_deviceid','c_devicesn','c_status','c_type']);
+		$list = DbDevice::getInstance()->getOneColumns([],['c_deviceid','c_devicesn','c_status','c_type']);
 		$res = [];
 		foreach ($list as $k => $task) {
 			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
@@ -216,7 +217,7 @@ class Control {
 			return false;
 		}
 		$res = Lib\Robot::delAgent($id);
-		$res1 = db('Device')->delete($id);
+		$res1 = Db::table('t_device')->delete($id);
 		if ($res && $res1) {
 			return true;
 		}

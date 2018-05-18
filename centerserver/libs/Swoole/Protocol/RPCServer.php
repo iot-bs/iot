@@ -221,8 +221,10 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
                 $body = \swoole_serialize::pack($data);
                 break;
             case self::DECODE_PHP:
-            default:
                 $body = serialize($data);
+                break;
+            default:
+                $body = json_encode($data);
                 break;
         }
         if ($gzip_compress)
@@ -252,8 +254,9 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
             case self::DECODE_SWOOLE:
                 return \swoole_serialize::unpack($data);
             case self::DECODE_PHP;
-            default:
                 return unserialize($data);
+            default:
+                return json_decode($data, true);
         }
     }
 

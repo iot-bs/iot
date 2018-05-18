@@ -115,7 +115,7 @@ class CenterServer extends Swoole\Protocol\SOAServer {
 
 	public function call($request, $header) {
 		echo "Lib ------ CenterServer ----------call\n" . PHP_EOL;
-		print_r($request);
+//		print_r($request);
 		// print_r($header);
         if(isset($request['RequestControl'])){
             if(in_array($request['RequestControl'],['8','9','10','11','12','2'])){
@@ -125,7 +125,7 @@ class CenterServer extends Swoole\Protocol\SOAServer {
 
 		$request['fd'] = $header['fd'];
 		$res = Device\Split::isDevice($request);
-		print_r($res);
+//		print_r($res);
 		if ($res['key'] > 0) {
 			if($res['key'] != 9){
 				return Util::msg('1',['DeviceSn' => $request['DeviceSn'],'RequestStatus' => '0']);

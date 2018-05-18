@@ -1,36 +1,51 @@
 <?php
 namespace model;
-class Monitor {
-	/**
-	 * @Author   liuxiaodong
-	 * @DateTime 2018-04-09
-	 * @return   [type]      [封装的monitor数据库类]
-	 */
-	protected static $monitor;
-	public static function getInstance() {
-		self::$monitor = new self();
-		return self::$monitor;
+use think\Db;
+/**
+ * @Author   liuxiaodong
+ * @DateTime 2018-04-09
+ * @return   [type]      [封装的monitor数据库类]
+ */
 
-	}
+class Monitor
+{
+    public $table;
+    /**
+     * 单例模式
+     * @var null
+     */
+    private static $_instance = null;
+    public function __construct()
+    {
+        $this->table = Db::table('t_monitor');
+    }
+
+    public static function getInstance(){
+        if(empty(self::$_instance))
+        {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 	/**
 	 * @param    [type]      $where [where condition]
 	 * @return   [type]             [return all list]
 	 */
-	public static function getAllMonitors($where = []) {
-		return db('monitor')->where($where)->select();
+	public  function getAllMonitors($where = []) {
+		return $this->table->where($where)->select();
 	}
 	/**
 	 * @param    [type]      $where [condition]
 	 * @return   [type]             [return one res]
 	 */
-	public static function getOneMonitor($where) {
-		return db('monitor')->where($where)->find();
+	public function getOneMonitor($where) {
+		return $this->table->where($where)->find();
 	}
-	public static function updateMonitor($data) {
-		return db('monitor')->update($data);
+	public function updateMonitor($data) {
+		return $this->table->update($data);
 	}
-	public static function insertMonitor($data){
+	public function insertMonitor($data){
 	    $data['create_time'] = time();
-		return db('Monitor')->insertGetId($data);
+		return $this->table->insertGetId($data);
 	}	
 }

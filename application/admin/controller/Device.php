@@ -55,6 +55,7 @@ class Device extends Base {
 			}
 
 		}
+//		print_r($list);exit;
 		return $this->fetch('', [
 			'title' => '设备列表',
 			'list' => $list,

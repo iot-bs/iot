@@ -7,6 +7,7 @@
 namespace App;
 use Lib;
 use model\Device as DbDevice;
+use think\Db;
 
 class Device {
 
@@ -46,7 +47,7 @@ class Device {
 	 * @return array
 	 */
 	public static function getDevices($gets = [], $page = 1, $pagesize = 10) {
-		$list = DbDevice::getAllDevices();
+		$list = DbDevice::getInstance()->getAllDevices();
 		foreach ($list as $k => $task) {
 			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
 			if (!empty($tmp)) {
@@ -71,13 +72,13 @@ class Device {
 		if (empty($data)) {
 			return false;
 		}
-		$id = DbDevice::insertDevice($data);
+		$id = DbDevice::getInstance()->insertDevice($data);
 		if ($id) {
 			//重新加载代理
 			if (Lib\Robot::$aTable->set($id, ["devicesn" => $data['c_devicesn']])) {
 				return $id;
 			} else {
-				db('Device')->delete($id);
+				Db::table('t_device')->delete($id);
 				return false;
 			}
 
@@ -96,7 +97,7 @@ class Device {
 		if (empty($id)) {
 			return false;
 		}
-		$status = db('Device')->where(['c_deviceid' => $id])->value('c_status');
+		$status = Db::table('t_device')->where(['c_deviceid' => $id])->value('c_status');
 		if ($status == 0) {
 			$data['c_status'] = 1;
 			$res = Lib\Robot::stopAgent($id);
@@ -105,7 +106,7 @@ class Device {
 			$res = Lib\Robot::startAgent($id);
 		}
 		$data['c_deviceid'] = $id;
-		$res1 = DbDevice::updateDevice($data);
+		$res1 = DbDevice::getInstance()->updateDevice($data);
 		if ($res && $res1) {
 			return true;
 		}
@@ -122,7 +123,7 @@ class Device {
 			return false;
 		}
 		$res = Lib\Robot::delAgent($id);
-		$res1 = db('Device')->delete($id);
+		$res1 = Db::table('t_device')->delete($id);
 		if ($res && $res1) {
 			return true;
 		}

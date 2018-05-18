@@ -7,14 +7,19 @@
  */
 
 namespace model;
+use think\Db;
 
-class SafeLimit
+class SafeLimi
 {
     private static $_instance = null;
+    public $table;
+    public function __construct()
+    {
+        $this->table = Db::table('t_safe_limit');
+    }
 
     /**
      * 单例模式
-     * @return Predis|null
      * @throws \Exception
      */
     public static function getInstance()
@@ -25,7 +30,7 @@ class SafeLimit
         return self::$_instance;
     }
     public function getSafeLimit($sn){
-        return db('SafeLimit')->where('c_devicesn',$sn)->find();
+        return $this->table->where('c_devicesn',$sn)->find();
     }
     /**
      * 将设备传上来的数据更新数据库安全值范围
@@ -37,7 +42,7 @@ class SafeLimit
     public function updateSafeLimit($data){
         echo "Model ------ db  SafeLimit ----------updateSafeLimit\n" . PHP_EOL;
         $sn = $data['DeviceSn'];
-        $res = $this->where('c_devicesn',$sn)->find();
+        $res = $this->table->where('c_devicesn',$sn)->find();
         switch ($data['RequestControl'])
         {
             case '8':
@@ -47,7 +52,7 @@ class SafeLimit
                         $v = $data['CurrentCon'];
                     }
                 }
-                $this->where('c_devicesn',$sn)->update(['c_currentcon' => serialize($current)]);
+                $this->table->where('c_devicesn',$sn)->update(['c_currentcon' => serialize($current)]);
                 break;
             case '9':
                 $voltage = unserialize($res['c_vdccon']);
@@ -56,12 +61,12 @@ class SafeLimit
                         $v = $data['VdcCon'];
                     }
                 }
-                $this->where('c_devicesn',$sn)->update(['c_vdccon' => serialize($voltage)]);
+                $this->table->where('c_devicesn',$sn)->update(['c_vdccon' => serialize($voltage)]);
                 break;
             case '10':
                 $temp = unserialize($res['c_tempcon']);
                 $temp = $data['TempCon'];
-                $this->where('c_devicesn',$sn)->update(['c_tempcon' => serialize($temp)]);
+                $this->table->where('c_devicesn',$sn)->update(['c_tempcon' => serialize($temp)]);
                 break;
             default:
                 break;

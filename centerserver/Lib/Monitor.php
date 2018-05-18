@@ -13,11 +13,11 @@ class Monitor {
 
 	static private $column = [
 		"c_devicesn" => [\swoole_table::TYPE_STRING, 12], //设备编号
-		"c_voltage" => [\swoole_table::TYPE_STRING, 200], //设备电压
-		"c_current" => [\swoole_table::TYPE_STRING, 200], //设备电流
+		"c_voltage" => [\swoole_table::TYPE_STRING, 400], //设备电压
+		"c_current" => [\swoole_table::TYPE_STRING, 400], //设备电流
 		"c_temp" => [\swoole_table::TYPE_STRING, 200], //设备温度
-		"c_lng" => [\swoole_table::TYPE_STRING, 50], //设备维度
-		"c_lat" => [\swoole_table::TYPE_STRING, 50], //设备經度
+		"c_lng" => [\swoole_table::TYPE_STRING, 100], //设备维度
+		"c_lat" => [\swoole_table::TYPE_STRING, 100], //设备經度
 		"c_device_request" => [\swoole_table::TYPE_STRING, 5], //设备请求方式
 		"c_relay" => [\swoole_table::TYPE_STRING, 200], //设备继电器
 		"c_connect_type" => [\swoole_table::TYPE_STRING, 5], //设备链接方式
@@ -41,12 +41,13 @@ class Monitor {
         $table['c_current'] = serialize($data['Current']);
         $table['c_temp'] = $data['Temp'];
         $table['c_lng'] = $data['Lng'];
+        $table['c_lng'] = $data['Lng'];
         $table['c_lat'] = $data['Lat'];
         $table['c_device_request'] = $data['RequestControl'];
         $table['c_relay'] = serialize($data['Relay']);
         $table['c_connect_type'] = $data['ConnectType'];
         print_r($table);
-        DbMonitor::insertMonitor($table);
+        DbMonitor::getInstance()->insertMonitor($table);
         if(!self::$table->set($data['DeviceSn'],$table)){
             return false;
         }

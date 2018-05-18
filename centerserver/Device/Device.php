@@ -19,7 +19,7 @@ class Device {
 	}
 	//心跳设置状态
 	public function heartbeatSet($data) {
-        if(!SafeLimit::updateSafeLimit($data)){
+        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -60,14 +60,14 @@ class Device {
 	}
     //电流设置状态
     public function currentSet($data) {
-        if(!SafeLimit::updateSafeLimit($data)){
+        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
     }
     //电压设置状态
     public function voltagetSet($data) {
-        if(!SafeLimit::updateSafeLimit($data)){
+        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -75,7 +75,7 @@ class Device {
     //温度设置状态
     public function tempSet($data) {
         echo "Device ------ Device ----------tempSet\n" . PHP_EOL;
-        if(!SafeLimit::updateSafeLimit($data)){
+        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);

@@ -9,7 +9,6 @@ namespace app\admin\controller;
 use app\service\Service;
 use \Swoole\Pager;
 use think\Paginator;
-
 class Device extends Base {
 	public $device;
 	public $type;
@@ -31,23 +30,16 @@ class Device extends Base {
 		if (!empty($so)) {
 			$where['c_devicesn'] = ['c_devicesn', 'like', "%" . $so . "%"];
 		}
-		// $list = $this->device->getDeviceList($where, 'c_deviceid desc');
-		// if (empty($_GET["gid"])) {
-		// 	$gets["gid"] = '1';
-		// }
-		// $page = !empty($_GET['page']) ? $_GET['page'] : 1;
-		// $pagesize = 20;
-        //页数
-        if (!empty($_GET['pagesize'])) {
-            $pagesize = intval($_GET['pagesize']);
-        } else {
-            $pagesize = 10;
-        }
-        $page = !empty($_GET['page']) ? $_GET['page'] : 1;
-		$list = Service::getInstance()->call("Device::getDevices")->getResult(10);
-//        $pager = new Pager(array('total'=> $list["total"], 'perpage'  => $pagesize, 'nowindex' => $page));
-//        $this->assign('pager', array('total' => $list["total"], 'pagesize' => $pagesize, 'render' => $pager->render()));
-//        var_dump($list->render());
+		$allDeviceStatus = Service::getInstance()->call("Device::getDevices")->getResult(10);
+		$list = $this->device->select()->toArray();
+		foreach ($list as $k => $v) {
+			if (array_key_exists($v['c_devicesn'], $allDeviceStatus)) {
+				$list[$k]["lasttime"] = $$allDeviceStatus[$v['c_devicesn']]["lasttime"];
+				$list[$k]["isconnect"] = 1;
+			} else {
+				$list[$k]["isconnect"] = 0;
+			}
+		}
 //        exit;
 		if ($list) {
 			foreach ($list as $k => $v) {

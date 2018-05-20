@@ -12,48 +12,17 @@ use Lib\Tasks;
 use Lib\Robot;
 use Lib\Client;
 use Lib\Util;
-use think\Db;
+
 class Control {
 
-	/**
-	 * worker回调中心服 任务执行状态
-	 * @param $tasks
-	 * @return array
-	 */
-
-	public static function notify($tasks) {
-		echo "APP ------ Control ----------notify" . PHP_EOL;
-		if (empty($tasks) || count($tasks) <= 0) {
-			return Lib\Util::errCodeMsg(101, "The tasks can't be empty");
-		}
-		$header = Lib\LoadTasks::getTasks();
-		foreach ($tasks as $task) {
-			if ($task["code"] == 0) {
-				$runStatus = Lib\LoadTasks::RunStatusSuccess;
-			} else {
-				$runStatus = Lib\LoadTasks::RunStatusFailed;
-				Lib\Report::taskFailed($task["taskId"], $task["runid"], $task["code"]);
-			}
-			$header->set($task["taskId"], ["runStatus" => $runStatus, "runUpdateTime" => time()]);
-			$header->decr($task["taskId"], 'execNum'); //减少当前执行数量
-			if (Lib\Tasks::$table->exist($task["runid"])) {
-				Lib\Tasks::$table->set($task["runid"], ["runStatus" => $runStatus]);
-			}
-			Lib\TermLog::log($task["runid"], $task["taskId"], "任务已经执行完成", $task);
-		}
-		return Lib\Util::errCodeMsg(0, "ok");
-	}
-
-
-
-	/**
+    /**
 	 * 获取代理服务器
 	 * @return array
 	 */
 	public static function getControls($gets = [], $page = 1, $pagesize = 10) {
 		// $list = DbDevice::getAllDevices();
 		echo '----------------Control table'.PHP_EOL;
-		$list = DbDevice::getInstance()->getOneColumns([],['c_deviceid','c_devicesn','c_status','c_type']);
+		$list = DbDevice::getInstance()->getOneColumns([],'c_deviceid,c_devicesn,c_status,c_type');
 		$res = [];
 		foreach ($list as $k => $task) {
 			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
@@ -217,38 +186,12 @@ class Control {
 			return false;
 		}
 		$res = Lib\Robot::delAgent($id);
-		$res1 = Db::table('t_device')->delete($id);
+        $res1 = DbDevice::getInstance()->delDevice($id);
 		if ($res && $res1) {
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * 删除任务代理
-	 * @param $id
-	 * @return array
-	 */
-	public static function deleteDevice($id) {
-		echo "APP ------ Device ----------deleteDevice" . PHP_EOL;
-		if (empty($id)) {
-			return Lib\Util::errCodeMsg(101, "参数为空");
-		}
-		if (!table("Devices")->del($id)) {
-			return Lib\Util::errCodeMsg(102, "删除失败");
-		}
-		table("Device_group")->dels(["aid" => $id]);
-		self::reload($id);
-		return Lib\Util::errCodeMsg(0, "删除成功");
-	}
-
-	private static function reload($aid) {
-		echo "APP ------ Device ----------reload" . PHP_EOL;
-		$Devices = table("Devices");
-		$info = $Devices->get($aid);
-		if (empty($info) && $info["status"] == 1) {
-			Lib\Robot::$aTable->del($aid);
-		}
-	}
 
 }

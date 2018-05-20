@@ -5,8 +5,20 @@ use Lib\Util;
 use Lib\Monitor;
 use model\Warning;
 use model\SafeLimit;
-class Device {
-	//初始连接
+class Device
+{
+    static public $tableSafeLimit;
+    static public $tableWarning;
+    static public $tableDevice;
+    public function __construct()
+    {
+        self::$tableSafeLimit = \model\SafeLimit::getInstance();
+        self::$tableWarning  = \model\Warning::getInstance();
+        self::$tableDevice = \model\Device::getInstance();
+
+    }
+
+    //初始连接
 	public function initConnect($data) {
 		echo "Device ------ Device ----------initConnect\n" . PHP_EOL;
 		if (Robot::register($data['fd'], $data['DeviceSn']) && Monitor::updateMonitor($data)) {
@@ -19,7 +31,7 @@ class Device {
 	}
 	//心跳设置状态
 	public function heartbeatSet($data) {
-        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
+        if(!self::$tableSafeLimit->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -60,14 +72,16 @@ class Device {
 	}
     //电流设置状态
     public function currentSet($data) {
-        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
+        if(!self::$tableSafeLimit->updateSafeLimit($data))
+        {
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
     }
     //电压设置状态
-    public function voltagetSet($data) {
-        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
+    public function voltageSet($data) {
+        if(!self::$tableSafeLimit->updateSafeLimit($data))
+        {
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -75,7 +89,7 @@ class Device {
     //温度设置状态
     public function tempSet($data) {
         echo "Device ------ Device ----------tempSet\n" . PHP_EOL;
-        if(!SafeLimit::getInstance()->updateSafeLimit($data)){
+        if(!self::$tableSafeLimit->updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -83,14 +97,14 @@ class Device {
     //获取设备安全阈值
     public function getSafeLimit($data){
 	    echo "-----------------anquan ceshio yuzhi ---".PHP_EOL;
-        $res = \model\SafeLimit::getInstance()->getSafeLimit($data['DeviceSn']);
+        $res = self::$tableSafeLimit->getSafeLimit($data['DeviceSn'],'c_devivecsn');
          $msg = Util::msg('13',['DeviceSn' =>$data['DeviceSn'],'VdcConArray' => unserialize($res['c_vdccon']),'TempConArray' => unserialize($res['c_tempcon']),'CurrentConArray' => unserialize($res['c_currentcon']),'RequestStatus' => '1']);
          return $msg;
 
     }
     //安全警报
     public function warnSet($data){
-	    $res = Warning::getInstance()->insertWarnData($data);
+	    $res = self::$tableWarning->insertWarnData($data);
 	    if($res){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
         }

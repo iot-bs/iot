@@ -7,31 +7,28 @@
  */
 
 namespace model;
-use think\Db;
-
 class Warning
 {
     public $table;
     public static $_instance = null;
-    public function __construct()
-    {
-        $this->table = Db::table('t_warning');
-    }
-
-    /**
-     * 单例模式
-     */
     public static function getInstance()
     {
-        if(empty(self::$_instance)){
+        if(empty(self::$_instance))
+        {
             self::$_instance = new self();
         }
         return self::$_instance;
     }
-    public function insertWarnData($data){
+    public function __construct()
+    {
+        $this->table = table('t_warning');
+    }
+
+    public function insertWarnData($data)
+    {
         $save['c_devicesn'] = $data['DeviceSn'];
         $save['c_type'] = $data['WarnType'];
-        $res = db('SafeLimit')->where('c_devicesn',$data['DeviceSn'])->find();
+        $res = $this->table->get($data['DeviceSn'],'c_devicesn');
         switch ($data['WarnType']){
             case 'Current':
                 $current = unserialize($res['c_currentcon']);
@@ -65,7 +62,7 @@ class Warning
                 break;
         }
         $save['c_time'] = time();
-        $res = $this->table->insert($save);
+        $res = $this->table->put($data);
         return $res;
     }
 }

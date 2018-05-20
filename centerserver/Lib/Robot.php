@@ -68,7 +68,7 @@ class Robot {
 	public static function stopAgent($id) {
 		echo "Lib ------ Robot ----------stopAgent" . PHP_EOL;
 		$res = self::$aTable->del($id);
-		$res = self::$tableAgent->getOneDevice(['c_deviceid' => $id]);
+		$res = self::$tableAgent->getOneDevice($id);
 		$devicesn = $res['c_devicesn'];
 		if (self::$table->exist($devicesn)) {
 			$client = new Client($devicesn);
@@ -96,7 +96,7 @@ class Robot {
 	 */
 	public static function startAgent($id) {
 		echo "Lib ------ Robot ----------startAgent\n" . PHP_EOL;
-		$agent = self::$tableAgent->getOneDevice(['c_deviceid' => $id]);
+		$agent = self::$tableAgent->getOneDevice($id);
 		$res = self::$aTable->set($agent["c_deviceid"], [
 			"devicesn" => $agent["c_devicesn"],
 		]);
@@ -114,7 +114,7 @@ class Robot {
 	public static function delAgent($id) {
 		echo "Lib ------ Robot ----------delAgent" . PHP_EOL;
 		$res = self::$aTable->del($id);
-		$res = self::$tableAgent->getOneDevice(['c_deviceid' => $id]);
+		$res = self::$tableAgent->getOneDevice($id);
 		$devicesn = $res['c_devicesn'];
 		if (self::$table->exist($devicesn)) {
 			$client = new Client($devicesn);
@@ -143,7 +143,7 @@ class Robot {
 	 */
 	public static function register($fd, $devicesn) {
 		echo "Lib ------ Robot ----------register\n" . PHP_EOL;
-		$id = self::$tableAgent->getOneDevice(['c_devicesn' => $devicesn]);
+		$id = self::$tableAgent->getOneDevice($devicesn,'c_devicesn');
 		if (empty($id)) {
 			return false;
 		}

@@ -34,7 +34,7 @@ class Tasks
         self::$table->create();
     }
     public static function updateRelay($data){
-        print_r('LIB------------------------Tasks ----------------updaterelay').PHP_EOL;
+        echo 'LIB------------------------Tasks ----------------updaterelay'.PHP_EOL;
         $devicesn = $data['c_devicesn'];
         $fd = Robot::$table->get($devicesn);
         if(!$fd){

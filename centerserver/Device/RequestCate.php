@@ -26,7 +26,7 @@ class RequestCate {
 	public static function checkToken($data) {
 		echo "Device ------ RequestCate ----------checkToken\n" . PHP_EOL;
 		$devicesn = $data['DeviceSn'];
-		$id = DbDevice::getInstance()->getOneDevice(['c_devicesn' => $devicesn]);
+		$id = \model\Device::getInstance()->getOneDevice($devicesn,'c_devicesn');
 		if (empty($id)) {
 			return false;
 		}

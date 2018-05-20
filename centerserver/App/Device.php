@@ -7,60 +7,33 @@
 namespace App;
 use Lib;
 use model\Device as DbDevice;
-use think\Db;
 
 class Device {
 
 	/**
-	 * worker回调中心服 任务执行状态
-	 * @param $tasks
-	 * @return array
-	 */
-
-	public static function notify($tasks) {
-		echo "APP ------ Device ----------notify" . PHP_EOL;
-		if (empty($tasks) || count($tasks) <= 0) {
-			return Lib\Util::errCodeMsg(101, "The tasks can't be empty");
-		}
-		$header = Lib\LoadTasks::getTasks();
-		foreach ($tasks as $task) {
-			if ($task["code"] == 0) {
-				$runStatus = Lib\LoadTasks::RunStatusSuccess;
-			} else {
-				$runStatus = Lib\LoadTasks::RunStatusFailed;
-				Lib\Report::taskFailed($task["taskId"], $task["runid"], $task["code"]);
-			}
-			$header->set($task["taskId"], ["runStatus" => $runStatus, "runUpdateTime" => time()]);
-			$header->decr($task["taskId"], 'execNum'); //减少当前执行数量
-			if (Lib\Tasks::$table->exist($task["runid"])) {
-				Lib\Tasks::$table->set($task["runid"], ["runStatus" => $runStatus]);
-			}
-			Lib\TermLog::log($task["runid"], $task["taskId"], "任务已经执行完成", $task);
-		}
-		return Lib\Util::errCodeMsg(0, "ok");
-	}
-
-
-
-	/**
-	 * 获取代理服务器
+	 * 获取设备
 	 * @return array
 	 */
 	public static function getDevices($gets = [], $page = 1, $pagesize = 10) {
-		$list = DbDevice::getInstance()->getAllDevices();
-		print_r($list);
-		foreach ($list as $k => $task) {
-			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
-			if (!empty($tmp)) {
-				$list[$k]["lasttime"] = $tmp["lasttime"];
-				$list[$k]["isconnect"] = 1;
-			} else {
-				$list[$k]["isconnect"] = 0;
-			}
-		}
-		print_r($list);
-		return $list;
-	}
+//		$list = DbDevice::getInstance()->getAllDevices();
+//		print_r($list);
+		$deives = Lib\Robot::$table;
+		$res = [];
+		foreach($deives as $k => $v){
+		    $res[$k] = $v;
+        }
+//		foreach ($list as $k => $task) {
+//			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
+//			if (!empty($tmp)) {
+//				$list[$k]["lasttime"] = $tmp["lasttime"];
+//				$list[$k]["isconnect"] = 1;
+//			} else {
+//				$list[$k]["isconnect"] = 0;
+//			}
+//		}
+
+        return $res;
+}
 
 
 	/**
@@ -80,7 +53,7 @@ class Device {
 			if (Lib\Robot::$aTable->set($id, ["devicesn" => $data['c_devicesn']])) {
 				return $id;
 			} else {
-				Db::table('t_device')->delete($id);
+				DbDevice::getInstance()->delDevice($id);
 				return false;
 			}
 
@@ -99,7 +72,8 @@ class Device {
 		if (empty($id)) {
 			return false;
 		}
-		$status = Db::table('t_device')->where(['c_deviceid' => $id])->value('c_status');
+		$dev = DbDevice::getInstance()->getOneDevice($id);
+		$status = $dev['c_status'];
 		if ($status == 0) {
 			$data['c_status'] = 1;
 			$res = Lib\Robot::stopAgent($id);
@@ -108,7 +82,7 @@ class Device {
 			$res = Lib\Robot::startAgent($id);
 		}
 		$data['c_deviceid'] = $id;
-		$res1 = DbDevice::getInstance()->updateDevice($data);
+		$res1 = DbDevice::getInstance()->updateDevice($id,$data);
 		if ($res && $res1) {
 			return true;
 		}
@@ -125,7 +99,7 @@ class Device {
 			return false;
 		}
 		$res = Lib\Robot::delAgent($id);
-		$res1 = Db::table('t_device')->delete($id);
+		$res1 = DbDevice::getInstance()->delDevice($id);
 		if ($res && $res1) {
 			return true;
 		}

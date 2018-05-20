@@ -10,7 +10,9 @@ use model\Device;
 use model\Monitor as DbMonitor;
 class Monitor {
 	static public $table;
-
+	//数据库表
+    static public $tableMonitor;
+    static public $tableDevice;
 	static private $column = [
 		"c_devicesn" => [\swoole_table::TYPE_STRING, 12], //设备编号
 		"c_voltage" => [\swoole_table::TYPE_STRING, 400], //设备电压
@@ -33,7 +35,15 @@ class Monitor {
 			self::$table->column($key, $v[0], $v[1]);
 		}
 		self::$table->create();
+		self::$tableMonitor = \model\Monitor::getInstance();
+		self::$tableDevice = \model\Device::getInstance();
 	}
+
+    /**
+     * 更新心跳
+     * @param $data
+     * @return bool
+     */
     public static function updateMonitor($data){
         echo "Lib ------ Monitor ----------updateMonitor\n" . PHP_EOL;       
         $table['c_devicesn'] = $data['DeviceSn'];
@@ -47,7 +57,7 @@ class Monitor {
         $table['c_relay'] = serialize($data['Relay']);
         $table['c_connect_type'] = $data['ConnectType'];
         print_r($table);
-        DbMonitor::getInstance()->insertMonitor($table);
+        self::$tableMonitor->insertMonitor($data);
         if(!self::$table->set($data['DeviceSn'],$table)){
             return false;
         }

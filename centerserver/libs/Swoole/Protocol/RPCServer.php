@@ -242,6 +242,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static function decode($data, $unseralize_type = self::DECODE_PHP)
     {
+        print_r($data);
         if ($unseralize_type & self::DECODE_GZIP)
         {
             $unseralize_type &= ~self::DECODE_GZIP;

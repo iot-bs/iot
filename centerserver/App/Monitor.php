@@ -154,13 +154,4 @@ class Monitor {
 		return Lib\Util::errCodeMsg(0, "删除成功");
 	}
 
-	private static function reload($aid) {
-		echo "APP ------ Device ----------reload" . PHP_EOL;
-		$Devices = table("Devices");
-		$info = $Devices->get($aid);
-		if (empty($info) && $info["status"] == 1) {
-			Lib\Robot::$aTable->del($aid);
-		}
-	}
-
 }

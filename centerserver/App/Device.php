@@ -48,6 +48,7 @@ class Device {
 	 */
 	public static function getDevices($gets = [], $page = 1, $pagesize = 10) {
 		$list = DbDevice::getInstance()->getAllDevices();
+		print_r($list);
 		foreach ($list as $k => $task) {
 			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
 			if (!empty($tmp)) {
@@ -57,6 +58,7 @@ class Device {
 				$list[$k]["isconnect"] = 0;
 			}
 		}
+		print_r($list);
 		return $list;
 	}
 
@@ -130,31 +132,6 @@ class Device {
 		return false;
 	}
 
-	/**
-	 * 删除任务代理
-	 * @param $id
-	 * @return array
-	 */
-	public static function deleteDevice($id) {
-		echo "APP ------ Device ----------deleteDevice" . PHP_EOL;
-		if (empty($id)) {
-			return Lib\Util::errCodeMsg(101, "参数为空");
-		}
-		if (!table("Devices")->del($id)) {
-			return Lib\Util::errCodeMsg(102, "删除失败");
-		}
-		table("Device_group")->dels(["aid" => $id]);
-		self::reload($id);
-		return Lib\Util::errCodeMsg(0, "删除成功");
-	}
 
-	private static function reload($aid) {
-		echo "APP ------ Device ----------reload" . PHP_EOL;
-		$Devices = table("Devices");
-		$info = $Devices->get($aid);
-		if (empty($info) && $info["status"] == 1) {
-			Lib\Robot::$aTable->del($aid);
-		}
-	}
 
 }

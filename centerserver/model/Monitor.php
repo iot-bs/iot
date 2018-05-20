@@ -45,7 +45,12 @@ class Monitor
 		return $this->table->update($data);
 	}
 	public function insertMonitor($data){
+	    echo "insert model monitor  ----------".PHP_EOL;
 	    $data['create_time'] = time();
-		return $this->table->insertGetId($data);
-	}	
+	    try{
+            $this->table->insert($data);
+        }catch (\Exception $e){
+	        echo "monitor data chongfu l ";
+        }
+	}
 }

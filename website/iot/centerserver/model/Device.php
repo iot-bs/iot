@@ -29,7 +29,7 @@ class Device
 	 */
 	public function getAllDevices() {
 	    $res = $this->table->select();
-	    return $res;
+	    print_r($res);
 //		return $this->table->select();
 	}
 	public function getOneColumns($where = [], $column = ''){

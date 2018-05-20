@@ -30,7 +30,6 @@ Swoole\Network\Server::start(function ($opt) {
 	//重定向PHP错误日志到logs目录
 	ini_set('error_log', getRunPath() . '/logs/php_errors.log');
 
-	\Lib\LoadTasks::init(); //载入任务表
 	\Lib\Donkeyid::init(); //初始化donkeyid对象
 	\Lib\Tasks::init(); //创建task表
 	\Lib\Monitor::init(); //创建监控状态表

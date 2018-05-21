@@ -26,10 +26,10 @@ class Device
 	    $res = $this->table->gets($where);
 	    return $res;
 	}
-	public function getOneColumns($where = [], $column = ''){
+	public function getOneColumns($column = '',$order = 'c_deviceid desc'){
 	    $data['select'] = $column;
-	    $data['where'] = $where;
-		return $this->table->gets($data);
+        $data['order'] = $order;
+	    return $this->table->gets($data);
 	}
 	/**
 	 * @param    [type]      $where [condition]
@@ -43,7 +43,7 @@ class Device
 		return $this->table->set($id,$data,$where);
 	}
 	public function insertDevice($data){
-		return $this->table->put>($data);
+		return $this->table->put($data);
 	}
 	/*
 	 * 默认使用主键作为条件，可修改$field指定其他字段
@@ -51,6 +51,6 @@ class Device
 	 */
 	public function delDevice($id, $field = 'c_deviceid')
     {
-        $this->table->del($id,$field);
+        return $this->table->del($id,$field);
     }
 }

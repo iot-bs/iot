@@ -22,19 +22,17 @@ class Monitor
 	public static function getMonitors($gets = [], $page = 1, $pagesize = 10) {
 		// $list = DbDevice::getAllDevices();
 		echo '----------------monitor table'.PHP_EOL;
-		$list =  DbDevice::getInstance()->getOneColumns([],'c_deviceid,c_devicesn,c_status,c_type');
-		foreach ($list as $k => $task) {
-			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
-			$monitor = Lib\Monitor::$table->get($task['c_devicesn']);
-			if (!empty($tmp)) {
-				$list[$k]["lasttime"] = $tmp["lasttime"];
-				$list[$k]["isconnect"] = 1;
-			} else {
-				$list[$k]["isconnect"] = 0;
-			}
-			$list[$k]['monitor'] = $monitor;
+        $allDeviceStatus = Lib\Robot::$table;
+        $devices = [];
+        foreach($allDeviceStatus as $k => $v){
+            $devices[$k] = $v;
+        }
+		$list =  Lib\Monitor::$table;
+		$monitors = [];
+		foreach ($list as $k => $v) {
+		    $monitors[$k] = $v;
 		}
-		return $list;
+		return ['deviceStatus' => $devices,'monitorStatus' => $monitors];
 	}
     public static function getMonitor($devicesn){
         return $monitor = Lib\Monitor::$table->get($devicesn);

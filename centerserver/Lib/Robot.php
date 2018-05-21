@@ -49,7 +49,7 @@ class Robot {
 	public static function loadAgents() {
 		echo "Lib ------ Robot ----------loadAgents\n" . PHP_EOL;
 		self::$tableAgent = Device::getInstance();
-		$agents = self::$tableAgent->getAllDevices(['c_status' => 0]);
+		$agents = self::$tableAgent->getAllDevices(['c_status = 0']);
 		if (empty($agents)) {
 			return false;
 		}
@@ -115,6 +115,7 @@ class Robot {
 		echo "Lib ------ Robot ----------delAgent" . PHP_EOL;
 		$res = self::$aTable->del($id);
 		$res = self::$tableAgent->getOneDevice($id);
+		print_r($res['c_devicesn']);
 		$devicesn = $res['c_devicesn'];
 		if (self::$table->exist($devicesn)) {
 			$client = new Client($devicesn);
@@ -124,15 +125,15 @@ class Robot {
 			} else {
 				$res1 = false;
 			}
-		}
-		{
-			$res1 = true;
-		}
-		if ($res && $res1) {
-			return true;
-		}
+		}else{
+            $res1 = true;
+        }
+        if($res1){
+		    return true;
+        }
+        return false;
 
-		return false;
+
 	}
 
 	/**
@@ -153,11 +154,13 @@ class Robot {
 				$client->call("close", []);
 			}
 			if (self::$table->set($devicesn, ['fd' => $fd, "lasttime" => time()])) {
+			    echo "set";
 				return true;
 			}
 		}
+        echo "endLib ------ Robot ----------register\n" . PHP_EOL;
 		return false;
-		echo "endLib ------ Robot ----------register\n" . PHP_EOL;
+
 	}
 
 	/**

@@ -32,8 +32,11 @@ class Device
 	    print_r($res);
 //		return $this->table->select();
 	}
-	public function getOneColumns($where = [], $column = ''){
-		return $this->table->where($where)->column($column);
+	public function getOneColumns($where = [],$column = '',$order = 'c_deviceid desc'){
+	    $swhere['order'] = $order;
+	    $swhere['where'] = $where;
+	    $swhere['select'] = $column;
+		return $this->table->gets($swhere);
 	}
 	/**
 	 * @param    [type]      $where [condition]

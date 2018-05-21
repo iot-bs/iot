@@ -20,25 +20,18 @@ class Control {
 	 * @return array
 	 */
 	public static function getControls($gets = [], $page = 1, $pagesize = 10) {
-		// $list = DbDevice::getAllDevices();
-		echo '----------------Control table'.PHP_EOL;
-		$list = DbDevice::getInstance()->getOneColumns([],'c_deviceid,c_devicesn,c_status,c_type');
-		$res = [];
-		foreach ($list as $k => $task) {
-			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
-			$monitor = Lib\Monitor::$table->get($task['c_devicesn']);
-			$res[$k]['c_devicesn'] = $task['c_devicesn'];
-			$res[$k]['c_deviceid'] = $task['c_deviceid'];
-			$res[$k]['c_type'] = $task['c_type'];
-			if (!empty($tmp)) {
-				$res[$k]["lasttime"] = $tmp["lasttime"];
-				$res[$k]["isconnect"] = 1;
-				$res[$k]['c_relay'] = $monitor['c_relay'];
-			} else {
-				$res[$k]["isconnect"] = 0;
-			}
-			$res[$k]['connecttype'] = $monitor['c_connect_type'];
-		}
+        echo '----------------monitor table'.PHP_EOL;
+        $allDeviceStatus = Lib\Robot::$table;
+        $devices = [];
+        foreach($allDeviceStatus as $k => $v){
+            $devices[$k] = $v;
+        }
+        $list =  Lib\Monitor::$table;
+        $monitors = [];
+        foreach ($list as $k => $v) {
+            $monitors[$k] = $v;
+        }
+        return ['deviceStatus' => $devices,'monitorStatus' => $monitors];
 		return $res;
 	}
 	public static function preOrderCheck($data){

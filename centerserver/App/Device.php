@@ -15,23 +15,11 @@ class Device {
 	 * @return array
 	 */
 	public static function getDevices($gets = [], $page = 1, $pagesize = 10) {
-//		$list = DbDevice::getInstance()->getAllDevices();
-//		print_r($list);
-		$deives = Lib\Robot::$table;
+        $allDeviceStatus = Lib\Robot::$table;
 		$res = [];
-		foreach($deives as $k => $v){
+		foreach($allDeviceStatus as $k => $v){
 		    $res[$k] = $v;
         }
-//		foreach ($list as $k => $task) {
-//			$tmp = Lib\Robot::$table->get($task["c_devicesn"]);
-//			if (!empty($tmp)) {
-//				$list[$k]["lasttime"] = $tmp["lasttime"];
-//				$list[$k]["isconnect"] = 1;
-//			} else {
-//				$list[$k]["isconnect"] = 0;
-//			}
-//		}
-
         return $res;
 }
 

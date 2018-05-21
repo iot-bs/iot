@@ -21,7 +21,7 @@ class Control extends Base {
 	 */
 	public function index() {
 
-		$list = Service::getInstance()->call("Control::getControls")->getResult(10);
+		$list = $this->getControls();
 		if ($list) {
 			foreach ($list as $k => $v) {
 				$list[$k]['c_type'] = $this->type[$v['c_type']];
@@ -37,13 +37,41 @@ class Control extends Base {
 			'list' => $list,
 		]);
 	}
+    /**
+     * 封装rpc返回的monitor状态
+     */
+    public function getControls()
+    {
+        $monitors = Service::getInstance()->call("Control::getControls")->getResult(10);
+        $deviceStatus = $monitors['deviceStatus'];
+        $monitorStatus = $monitors['monitorStatus'];
+        $res = model('Device')->select()->toArray();
+        foreach ($res as $k => $v)
+        {
+            if (array_key_exists($v['c_devicesn'], $deviceStatus)) {
 
+                $res[$k]["lasttime"] = $deviceStatus[$v['c_devicesn']]["lasttime"];
+                $res[$k]["isconnect"] = 1;
+            } else {
+                $res[$k]["isconnect"] = 0;
+            }
+            if (array_key_exists($v['c_devicesn'], $monitorStatus)) {
+                $res[$k]['c_relay'] = $monitorStatus[$v['c_devicesn']]['c_relay'];
+                $res[$k]['connecttype'] = $monitorStatus[$v['c_devicesn']]['c_connect_type'];
+                $res[$k]['monitor'] = $monitorStatus[$v['c_devicesn']];
+            }else
+            {
+                $res[$k]['monitor'] = [];
+            }
+        }
+        return $res;
+    }
 	/**
 	 * 电流电压上下限控制
 	 * @return mixed
 	 */
 	public function safe() {
-		$res = Service::getInstance()->call("Monitor::getMonitors")->getResult(10);
+		$res = $this->getControls();
 		$list = [];
 		foreach ($res as $k => $v) {
 			# code...

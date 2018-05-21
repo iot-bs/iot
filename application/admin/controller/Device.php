@@ -26,21 +26,31 @@ class Device extends Base {
 
 		$so = input('get.so');
 		$status = input('get.status');
-		$where['c_isdel'] = 0;
+		$swhere['c_isdel'] = 0;
 		if (!empty($so)) {
-			$where['c_devicesn'] = ['c_devicesn', 'like', "%" . $so . "%"];
+//            $swhere = [
+//                'c_devicesn'  =>  ['like',"%{$so}%"],
+//                'c_isdel' => 0
+//            ];
 		}
 		$allDeviceStatus = Service::getInstance()->call("Device::getDevices")->getResult(10);
-		$list = $this->device->select()->toArray();
+		$list = $this->device->where($swhere)->select()->toArray();
 		foreach ($list as $k => $v) {
-			if (array_key_exists($v['c_devicesn'], $allDeviceStatus)) {
-				$list[$k]["lasttime"] = $$allDeviceStatus[$v['c_devicesn']]["lasttime"];
-				$list[$k]["isconnect"] = 1;
-			} else {
-				$list[$k]["isconnect"] = 0;
-			}
+		    if(empty($allDeviceStatus))
+		    {
+                $list[$k]["isconnect"] = 0;
+            }else
+            {
+                if (array_key_exists($v['c_devicesn'], $allDeviceStatus)) {
+                    $list[$k]["lasttime"] = $allDeviceStatus[$v['c_devicesn']]["lasttime"];
+                    $list[$k]["isconnect"] = 1;
+                } else {
+                    $list[$k]["isconnect"] = 0;
+                }
+            }
+
 		}
-//        exit;
+
 		if ($list) {
 			foreach ($list as $k => $v) {
 				$list[$k]['c_type'] = $this->type[$v['c_type']];
@@ -240,7 +250,6 @@ class Device extends Base {
 			//接收数据
 			$data = [
 				'c_name' => input('post.c_name'),
-				'c_devicesn' => input('post.c_devicesn'),
 				'c_lng' => input('post.c_lng'),
 				'c_lat' => input('post.c_lat'),
 				'c_address' => input('post.c_address'),

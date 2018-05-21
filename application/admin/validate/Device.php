@@ -5,7 +5,6 @@ use think\Validate;
 class Device extends Validate {
 	protected $rule = [
 		'c_name' => 'require',
-		'c_devicesn' => 'require',
 		'c_lng' => 'require',
 		'c_lat' => 'require',
 		'c_type' => 'require',

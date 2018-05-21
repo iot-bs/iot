@@ -51,14 +51,41 @@ class Monitor extends Base {
 			'so' => empty($so) ? '' : $so,
 		]);
 	}
+
+    /**
+     * 封装rpc返回的monitor状态
+     */
+	public function getMonitors()
+    {
+        $monitors = Service::getInstance()->call("Monitor::getMonitors")->getResult(10);
+        $deviceStatus = $monitors['deviceStatus'];
+        $monitorStatus = $monitors['monitorStatus'];
+        $res = model('Device')->select()->toArray();
+
+        foreach ($res as $k => $v)
+        {
+            if (array_key_exists($v['c_devicesn'], $deviceStatus)) {
+                $res[$k]["lasttime"] = $deviceStatus[$v['c_devicesn']]["lasttime"];
+                $res[$k]["isconnect"] = 1;
+            } else {
+                $res[$k]["isconnect"] = 0;
+            }
+            if (array_key_exists($v['c_devicesn'], $monitorStatus)) {
+                $res[$k]['monitor'] = $monitorStatus[$v['c_devicesn']];
+            } else {
+                $res[$k]['monitor'] = [];
+            }
+
+        }
+        return $res;
+    }
 	/**
 	 * @Author   liuxiaodong
 	 * @DateTime 2018-04-11
 	 * @return   [type]      [description]
 	 */
 	public function status() {
-
-		$res = Service::getInstance()->call("Monitor::getMonitors")->getResult(10);
+        $res = $this->getMonitors();
 		$list = [];
 		foreach ($res as $k => $v) {
 			# code...
@@ -87,30 +114,12 @@ class Monitor extends Base {
 		]);
 	}
 
+    /**
+     * @return mixed
+     * 数据展示列表
+     */
     public  function datashow(){
-        $res = Service::getInstance()->call("Monitor::getMonitors")->getResult(10);
-        $list = [];
-        foreach ($res as $k => $v) {
-            # code...
-            if($v['monitor']){
-                $v['monitor']['c_voltage'] = unserialize($v['monitor']['c_voltage']);
-                $v['monitor']['c_current'] = unserialize($v['monitor']['c_current']);
-                $v['monitor']['c_relay'] = unserialize($v['monitor']['c_relay']);
-                $list[$k] = $v['monitor'];
-                $list[$k]['c_deviceid'] = $v['c_deviceid'];
-                $list[$k]['c_type'] = $this->type[$v['c_type']];
-                $list[$k]['map'] = \map\Map::Staticimage($list[$k]['c_lng'].','.$list[$k]['c_lat']);
-                $list[$k]['isconnect'] = 1;
-                // $list[$k]['map'] = \map\Map::Staticimage('106.67923744596,28.87613983528');
-            }
-            else{
-                $list[$k]['c_deviceid'] = $v['c_deviceid'];
-                $list[$k]['c_devicesn'] = $v['c_devicesn'];
-                $list[$k]['c_type'] = $this->type[$v['c_type']];
-                $list[$k]['isconnect'] = 0;
-            }
-        }
-//		 var_dump($list);exit;
+        $list = model('Device')->select()->toArray();
         return $this->fetch('', [
             'title' => '数据展示',
             'list' => $list,
@@ -123,6 +132,7 @@ class Monitor extends Base {
      */
     public function current(){
         if(request()->isGet()){
+            $this->assign('nos',config('devcon.voltageCon'));
         	$this->dataDeal('c_current','电流');
             return $this->fetch();
         }
@@ -134,8 +144,9 @@ class Monitor extends Base {
      */
     public function voltage(){
         if(request()->isGet()){
-        $this->dataDeal('c_voltage','电压');
-        return $this->fetch();
+            $this->assign('nos' ,config('devcon.currentCon'));
+            $this->dataDeal('c_voltage','电压');
+            return $this->fetch();
         }
         $this->error('数据错误');
     }
@@ -145,16 +156,12 @@ class Monitor extends Base {
         $data = [];
         $date = [];
         $current= [];
-        $nos = [];
         $devicesn = input('get.devicesn');
         $list = $this->monitor->getMonitor($devicesn,$type);
         foreach ($list as $k=>$v){
             $current = unserialize($v[$dataType]);
             $date[$k] = $v['create_time'];
             $data[$k] = $current[$no-1]['Value'];
-        }
-        foreach ($current as $v) {
-            $nos[] = $v['No'];
         }
         if($type == "day")
             $content ="今天";
@@ -167,7 +174,6 @@ class Monitor extends Base {
                 'content' =>$content,
                 'data' => json_encode($data),
                 'date' => json_encode($date),
-                'nos' => $nos,
                 'no' => $no,
                 'type'=>$type,
                 'devicesn' => $devicesn,

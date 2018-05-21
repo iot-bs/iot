@@ -33,7 +33,7 @@ class Monitor extends Model
      * @return array|\PDOStatement|string|\think\Collection
      * 获取一天之类的电流数据
      */
-    public function getMonitor($devicesn,$type){
+    public function getMonitor($devicesn,$type,$order='c_id desc'){
         switch ($type){
             case "day":
                 $where[] = ['create_time','between',[$this->startDay,$this->endDay]];
@@ -48,6 +48,6 @@ class Monitor extends Model
                 $where[] = ['create_time','between',[$this->startDay,$this->endDay]];
         }
         $where[] = ['c_devicesn','=',$devicesn];
-        return $this->where($where)->select();
+        return $this->where($where)->order($order)->select();
     }
 }

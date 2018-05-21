@@ -40,7 +40,7 @@ class Monitor {
 	}
 
     /**
-     * 更新心跳
+     *
      * @param $data
      * @return bool
      */
@@ -56,8 +56,9 @@ class Monitor {
         $table['c_device_request'] = $data['RequestControl'];
         $table['c_relay'] = serialize($data['Relay']);
         $table['c_connect_type'] = $data['ConnectType'];
+        $table['create_time'] = time();
         print_r($table);
-        self::$tableMonitor->insertMonitor($data);
+        self::$tableMonitor->insertMonitor($table);
         if(!self::$table->set($data['DeviceSn'],$table)){
             return false;
         }

@@ -31,9 +31,11 @@ class Monitor
 	 * @param    [type]      $where [where condition]
 	 * @return   [type]             [return all list]
 	 */
-	public  function getAllMonitors($where = [])
+	public  function getAllMonitors($where = [],$order = 'c_id desc')
     {
-		return $this->table->gets($where);
+        $data['where'] = $where;
+        $data['order'] = $order;
+		return $this->table->gets($data);
 	}
 	/**
 	 * @param    [type]      $where [condition]

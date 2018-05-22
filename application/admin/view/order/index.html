@@ -125,7 +125,7 @@
                                     {/if}
                                 </td>
                                 <td>
-                                    <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#catorderinfo" data-order-id="{$v.c_id}" title="订单详情">
+                                    <a class="btn btn-xs btn-info" onclick="o2o_open('电压数据','{:url('Monitor/voltage',['devicesn'=>1])}',1000,750);" data-toggle="modal" data-target="#catorderinfo" data-order-id="{$v.c_id}" title="订单详情">
                                         <i class="fa fa-file-code-o"></i>
                                     </a>
                                     <if condition="$v['c_type'] eq 2">

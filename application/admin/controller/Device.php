@@ -104,7 +104,7 @@ class Device extends Base {
             $voltageLower2 = input('post.voltage_lower2');
             $tempUpper = input('post.temp_upper');
             $tempLower = input('post.temp_lower');
-            if($currentUpper1<=$currentLower1 ||$currentUpper2<=$currentLower2 ||$currentUpper3<=$currentLower3 ||$voltageUpper1<=$voltageLower2||$voltageUpper2<=$voltageLower2||$tempUpper<=$tempLower){
+            if($currentUpper1<$currentLower1 ||$currentUpper2<$currentLower2 ||$currentUpper3<$currentLower3 ||$voltageUpper1<$voltageLower2||$voltageUpper2<$voltageLower2||$tempUpper<$tempLower){
                 return json([
                     'msg' => '安全值大小不合理',
                     'status' => 1,

@@ -50,24 +50,30 @@ class SafeLimit
         echo "Model ------ db  SafeLimit ----------updateSafeLimit\n" . PHP_EOL;
         $sn = $data['DeviceSn'];
         $res = $this->table->get($sn,'c_devicesn');
+        print_r($data);
         switch ($data['RequestControl'])
         {
             case '8':
                 echo "this is current set".PHP_EOL;
                 $current = unserialize($res['c_currentcon']);
-                foreach ($current as $v){
+                print_r($current);
+                foreach ($current as $k => $v){
+                    print_r($v['No']);
+                    echo "-----------------";
+                    print_r($data['CurrentCon']['No']);
                     if($v['No'] == $data['CurrentCon']['No']){
-                        $v = $data['CurrentCon'];
+                        $current[$k] = $data['CurrentCon'];
                     }
                 }
+                print_r($current);
                 $res = $this->updateOne($sn,['c_currentcon' => serialize($current)]);
                 print_r("res:is ".$res);
                 break;
             case '9':
                 $voltage = unserialize($res['c_vdccon']);
-                foreach ($voltage as $v){
+                foreach ($voltage as $k => $v){
                     if($v['No'] == $data['VdcCon']['No']){
-                        $v = $data['VdcCon'];
+                        $current[$k] = $data['VdcCon'];
                     }
                 }
                 $this->updateOne($sn,['c_vdccon' => serialize($voltage)]);

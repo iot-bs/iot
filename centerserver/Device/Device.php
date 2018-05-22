@@ -72,7 +72,8 @@ class Device
 	}
     //电流设置状态
     public function currentSet($data) {
-        if(!self::$tableSafeLimit->updateSafeLimit($data))
+        self::$tableSafeLimit->updateSafeLimit($data);
+        if(!\Table\SafeLimit::updateSafeLimit($data))
         {
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
@@ -80,7 +81,8 @@ class Device
     }
     //电压设置状态
     public function voltageSet($data) {
-        if(!self::$tableSafeLimit->updateSafeLimit($data))
+        self::$tableSafeLimit->updateSafeLimit($data);
+        if(!\Table\SafeLimit::updateSafeLimit($data))
         {
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
@@ -89,7 +91,8 @@ class Device
     //温度设置状态
     public function tempSet($data) {
         echo "Device ------ Device ----------tempSet\n" . PHP_EOL;
-        if(!self::$tableSafeLimit->updateSafeLimit($data)){
+        self::$tableSafeLimit->updateSafeLimit($data);
+        if(!\Table\SafeLimit::updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);

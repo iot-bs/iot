@@ -34,8 +34,10 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static $requestHeader;
 
-    public $packet_maxlen       = 2465792; //2M默认最大长度
-    protected $buffer_maxlen    = 10240; //最大待处理区排队长度, 超过后将丢弃最早入队数据
+//    public $packet_maxlen       = 2465792; //2M默认最大长度
+    public $packet_maxlen       = 9000000000; //2M默认最大长度
+//    protected $buffer_maxlen    = 10240; //最大待处理区排队长度, 超过后将丢弃最早入队数据
+    protected $buffer_maxlen    = 9000000000; //最大待处理区排队长度, 超过后将丢弃最早入队数据
     protected $buffer_clear_num = 128; //超过最大长度后，清理100个数据
 
     const ERR_HEADER            = 9001;   //错误的包头
@@ -86,6 +88,8 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
 
     function onReceive($serv, $fd, $reactor_id, $data)
     {
+        echo "onReceive ---------------------------------".PHP_EOL;
+        print_r(strlen($data));
         if (!isset($this->_buffer[$fd]) or $this->_buffer[$fd] === '')
         {
             //超过buffer区的最大长度了
@@ -106,6 +110,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
             }
             //解析包头
             $header = unpack(self::HEADER_STRUCT, substr($data, 0, self::HEADER_SIZE));
+            print_r($header);
             //错误的包头
             if ($header === false)
             {
@@ -201,6 +206,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static function encode($data, $type = self::DECODE_PHP, $uid = 0, $serid = 0)
     {
+        echo 'encode---------------------------data'.PHP_EOL;
         //启用压缩
         if ($type & self::DECODE_GZIP)
         {
@@ -225,6 +231,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
                 break;
             default:
                 $body = json_encode($data);
+                return pack(RPCServer::HEADER_PACK, strlen($body), self::DECODE_JSON, $uid, $serid) . $body;
                 break;
         }
         if ($gzip_compress)
@@ -242,6 +249,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static function decode($data, $unseralize_type = self::DECODE_PHP)
     {
+        echo "decode ----------------------------------------data".PHP_EOL;
         print_r($data);
         if ($unseralize_type & self::DECODE_GZIP)
         {

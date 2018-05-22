@@ -9,3 +9,16 @@ function deviceStatus($data){
         }
         return $data;
 }
+//分页函数
+function pagination($obj)
+{
+    if($obj)
+    {
+        $params = request()->param();
+        return '<div class="row">'.$obj->appends($params)->render().'</div>';
+    }
+    else
+    {
+        return '';
+    }
+}

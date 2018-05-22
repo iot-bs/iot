@@ -57,7 +57,6 @@ class Monitor {
         $table['c_relay'] = serialize($data['Relay']);
         $table['c_connect_type'] = $data['ConnectType'];
         $table['create_time'] = time();
-        print_r($table);
         self::$tableMonitor->insertMonitor($table);
         if(!self::$table->set($data['DeviceSn'],$table)){
             return false;

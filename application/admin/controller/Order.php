@@ -11,25 +11,19 @@ class Order extends Base {
 	 * 充值订单
 	 */
 	public function index() {
-		$where['o.c_isdel'] = 0;
+		$where['c_isdel'] = 0;
 		$so = input('get.so');
 		if (!empty($so)) {
 			$where[0] = ['u.c_nickname' => ['like', "%{$so}%"],
-				'c_order_sn' => $so,
-				'c_orderid' => $so,
-				'u.c_id' => $so,
+				'c_sn' => $so,
+				'c_id' => $so,
 				'_logic' => 'OR',
 			];
 		}
 		#分页
-		$list = $this->order->field('o.*,u.c_nickname,d.c_name')
-			->alias('o')
-			->join('LEFT JOIN __USER__ u ON o.c_uid=u.c_id')
-			->join('LEFT JOIN __DEVICE__ d ON o.c_device_id=d.c_deviceid')
-			->where($where)
-			->order('o.c_orderid desc')
-			->paginate();
-		$this->assign([
+        $list = $this->order->getOrder($where);
+//		var_dump($list);exit;
+        $this->assign([
 			'title' => '订单列表',
 			'list' => $list,
 			'so' => input('get.so'),

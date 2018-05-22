@@ -15,7 +15,7 @@ class SafeLimit {
     static public $table;
 
     static private $column = [
-        "safe_limit" => [\swoole_table::TYPE_STRING, 200], //电流状态
+        "safe_limit" => [\swoole_table::TYPE_STRING, 800], //电流状态
     ];
 
     /**

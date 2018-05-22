@@ -235,12 +235,6 @@ class Control extends Base {
 		if (request()->isPost()) {
 			$data['c_devicesn'] = input('post.devicesn');
 			$data['c_connect_type'] = input('post.value');
-			if(empty($data['username']) || $data['passwd']){
-                return json([
-                    'msg' => '失败',
-                    'status' => 1,
-                ]);
-            }
 			$data['username'] = input('post.username');
 			$data['passwd'] = input('post.passwd');
 			$res = Service::getInstance()->call("Control::contype", $data)->getResult(2);

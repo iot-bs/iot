@@ -26,9 +26,10 @@ class Warning
 
     public function insertWarnData($data)
     {
+        echo "insert --------------------------------warnData".PHP_EOL;
         $save['c_devicesn'] = $data['DeviceSn'];
         $save['c_type'] = $data['WarnType'];
-        $res = $this->table->get($data['DeviceSn'],'c_devicesn');
+        $res = table('t_safe_limit')->get($data['DeviceSn'],'c_devicesn');
         switch ($data['WarnType']){
             case 'Current':
                 $current = unserialize($res['c_currentcon']);
@@ -62,7 +63,7 @@ class Warning
                 break;
         }
         $save['c_time'] = time();
-        $res = $this->table->put($data);
+        $res = $this->table->put($save);
         return $res;
     }
 }

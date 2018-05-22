@@ -28,14 +28,6 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="breadcrumb-env" >
-                            <ol class="breadcrumb bc-1">
-
-                                <li class="active"><strong>{$sn}继电器情况监控</strong></li>
-                            </ol>
-                        </div>
-                    </div>
                     <div class="panel-body">
                         <table style="padding: 0" class="table responsive" id="msg">
                             <thead>
@@ -63,18 +55,20 @@
                                     <td>{$vo.c_devicesn}</td>
                                     <td>{$vo.c_no}</td>
                                     <td>{if $vo.c_control == 1}开{else /} 关{/if}</td>
-                                    <td>{if $vo.c_status == 1}操作成功{else /} 操作失败{/if}</td>
+                                    <td>{if $vo.c_status == 1}操作成功{else /} <font style="color:red">操作失败</font> {/if}</td>
                                     <td>{$vo.c_time|date="Y-m-d H:i:s"}</td>
                                 </tr>
 
                    
                             {/volist}
+
                             {/empty}
                             </tbody>
 
 
 
                         </table>
+                        {:pagination($list)}
                     </div>
                 </div>
             </div>

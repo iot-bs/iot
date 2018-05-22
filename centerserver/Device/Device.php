@@ -31,7 +31,7 @@ class Device
 	}
 	//心跳设置状态
 	public function heartbeatSet($data) {
-        if(!self::$tableSafeLimit->updateSafeLimit($data)){
+        if(!\Table\SafeLimit::updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
         }
         return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
@@ -97,8 +97,8 @@ class Device
     //获取设备安全阈值
     public function getSafeLimit($data){
 	    echo "-----------------anquan ceshio yuzhi ---".PHP_EOL;
-        $res = self::$tableSafeLimit->getSafeLimit($data['DeviceSn'],'c_devivecsn');
-         $msg = Util::msg('13',['DeviceSn' =>$data['DeviceSn'],'VdcConArray' => unserialize($res['c_vdccon']),'TempConArray' => unserialize($res['c_tempcon']),'CurrentConArray' => unserialize($res['c_currentcon']),'RequestStatus' => '1']);
+        $res = self::$tableSafeLimit->getSafeLimit($data['DeviceSn'],'c_devicesn');
+         $msg = Util::msg('13',['DeviceSn' =>$data['DeviceSn'],'VdcConArray' => unserialize($res['c_vdccon']),'TempConArray' => unserialize($res['c_tempcon']),'CurrentConArray' => unserialize($res['c_currentcon']),'Heartbeat' => $res['c_heartbeat'],'RequestStatus' => '1']);
          return $msg;
 
     }

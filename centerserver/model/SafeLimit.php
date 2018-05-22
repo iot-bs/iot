@@ -46,19 +46,22 @@ class SafeLimit
      * @throws \think\exception\DbException
      */
     public function updateSafeLimit($data){
+        echo "--update safe set -------".PHP_EOL;
         echo "Model ------ db  SafeLimit ----------updateSafeLimit\n" . PHP_EOL;
         $sn = $data['DeviceSn'];
-        $res = $this->table->get('c_devicesn',$sn);
+        $res = $this->table->get($sn,'c_devicesn');
         switch ($data['RequestControl'])
         {
             case '8':
+                echo "this is current set".PHP_EOL;
                 $current = unserialize($res['c_currentcon']);
                 foreach ($current as $v){
                     if($v['No'] == $data['CurrentCon']['No']){
                         $v = $data['CurrentCon'];
                     }
                 }
-                $this->updateOne($sn,['c_currentcon' => serialize($current)]);
+                $res = $this->updateOne($sn,['c_currentcon' => serialize($current)]);
+                print_r("res:is ".$res);
                 break;
             case '9':
                 $voltage = unserialize($res['c_vdccon']);

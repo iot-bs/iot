@@ -51,6 +51,7 @@ class Control {
      * @param $data
      */
     public static function doLimit($data){
+        print_r($data);
         $devicesn = $data['DeviceSn'];
         $fd = Robot::$table->get($devicesn);
         if(!$fd){

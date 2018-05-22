@@ -28,14 +28,6 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="breadcrumb-env" >
-                            <ol class="breadcrumb bc-1">
-
-                                <li class="active"><strong>{$sn}异常情况监控</strong></li>
-                            </ol>
-                        </div>
-                    </div>
                     <div class="panel-body">
                         <table style="padding: 0" class="table responsive" id="msg">
                             <thead>
@@ -71,10 +63,8 @@
                             {/volist}
                             {/empty}
                             </tbody>
-
-
-
-                        </table>
+                       </table>
+                        {:pagination($list)}
                     </div>
                 </div>
             </div>

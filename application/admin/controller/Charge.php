@@ -14,7 +14,7 @@ class Charge extends Base {
 	 * 首页渲染
 	 */
 	public function index() {
-		$where = array('c_isdel' => 0);
+		$where = array('c_isdel' => 1);
 		$list = $this->charge->getChargeList($where);
 		foreach ($list as $k => $v) {
 			$list[$k]['c_type'] = $this->type[$v['c_type']];

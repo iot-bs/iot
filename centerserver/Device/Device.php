@@ -58,6 +58,7 @@ class Device
 	}
 	//客户端设置状态$
 	public function deviceSet($data) {
+        \Table\SafeLimit::updateSafeLimit($data);
 		if(!Monitor::updateMonitor($data)){
 			return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
 		}

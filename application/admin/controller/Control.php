@@ -200,7 +200,7 @@ class Control extends Base {
 			$data['c_deviceid'] = input('post.id');
 			$data['c_devicesn'] = input('post.sn');
 			$data['c_relay'][input('post.key')] = input('post.value');
-			$res = Service::getInstance()->call("Control::update", $data)->getResult(2);
+			$res = Service::getInstance()->call("Control::update", $data)->getResult(10);
 			if ($res) {
 			    db('Relay')->insert(['c_devicesn'=> input('post.sn'),'c_no' => input('post.key'),'c_control' => input('post.value'),'c_time' =>time(),'c_status' => '1']);
 				return json([

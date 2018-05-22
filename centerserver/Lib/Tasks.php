@@ -42,22 +42,38 @@ class Tasks
         }
         $call = Util::msg('3',['DeviceSn' => $devicesn,'Relay' => $data['c_relay']]);
         $client = new Client($devicesn);
-        $client->control($call);                
-        $res = Monitor::$table->get($devicesn);
-        $relay = unserialize($res['c_relay']);
-        foreach ($data['c_relay'] as $k => $v) {
-            # code...
-            if($relay[$k] == $v){
-                $ret = false;
-            }{
-                $ret = true;
+        $client->control($call);
+        //判断设备继电器返回的结果，从内存中读取结果进行判断
+        sleep(2);
+        $res = \Table\SafeLimit::$table->get($devicesn);
+        try{
+            if(!empty($res))
+            {
+                $res = unserialize($res['safe_limit']);
+                if($res['RequestControl'] == '7' && $res['ControlStatus'] == '1')
+                {
+                    $relay = $res['Relay'];
+                    foreach ($data['c_relay'] as $k => $v)
+                    {
+                        if($relay[$k] == $v){
+                            $ret = false;
+                        }
+                        {
+                            $ret = true;
+                        }
+                    }
+                }
+            }else
+            {
+                return false;
             }
+            return $ret;
         }
-        if(!$ret){
+        catch (Exception $e){
             return false;
         }
-        return true;
-    }
+
+   }
     public static function contype($data){
          $devicesn = $data['c_devicesn'];
         $fd = Robot::$table->get($devicesn);

@@ -139,6 +139,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
 
         //数据解包
         $request = self::decode($this->_buffer[$fd], $this->_headers[$fd]['type']);
+        print_r($request);
         if ($request === false)
         {
             $this->sendErrorMessage($fd, self::ERR_UNPACK);
@@ -250,7 +251,6 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
     static function decode($data, $unseralize_type = self::DECODE_PHP)
     {
         echo "decode ----------------------------------------data".PHP_EOL;
-        print_r($data);
         if ($unseralize_type & self::DECODE_GZIP)
         {
             $unseralize_type &= ~self::DECODE_GZIP;

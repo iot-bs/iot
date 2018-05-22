@@ -121,11 +121,8 @@ class Control {
 		if (empty($data['c_deviceid']) && empty($data)) {
 			return false;
 		}
-		$ret = Tasks::updateRelay($data);
-		if(!$ret){
-			return false;
-		}
-		return true;
+        $res = Tasks::updateRelay($data);
+        return $res;
 	}
 	/**
 	 * @param    [type]      $data [description]

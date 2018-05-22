@@ -132,7 +132,7 @@ class Monitor extends Base {
      */
     public function current(){
         if(request()->isGet()){
-            $this->assign('nos',config('devcon.voltageCon'));
+            $this->assign('nos',config('devcon.currentCon'));
         	$this->dataDeal('c_current','电流');
             return $this->fetch();
         }
@@ -144,7 +144,7 @@ class Monitor extends Base {
      */
     public function voltage(){
         if(request()->isGet()){
-            $this->assign('nos' ,config('devcon.currentCon'));
+            $this->assign('nos' ,config('devcon.voltageCon'));
             $this->dataDeal('c_voltage','电压');
             return $this->fetch();
         }

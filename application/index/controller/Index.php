@@ -40,6 +40,27 @@ class Index extends  Controller{
 //        $type = 'current';
 //        $a = $type=='current'?'10':($type=='voltage'?'11':($type=='temp'?'12':'10'));
 //        print_r($a);
+//        $data['c_relay'] = [
+//            '2' => '0'
+//        ];
+//        $relay = [
+//            '1'=> '1',
+//            '2' => '2',
+//            '3' => '3',
+//        ];
+//        foreach ($data['c_relay'] as $k => $v) {
+//            # code...
+//            print_r($k);
+//            echo '<br>';
+//            print_r($relay[2]);
+//            echo '<br>';
+//            print_r($v);
+//            if($relay[$k] == $v){
+//                $ret = false;
+//            }{
+//                $ret = true;
+//            }
+//        }
 	}
 
 }

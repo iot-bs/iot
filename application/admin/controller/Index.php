@@ -6,7 +6,7 @@ class Index extends Base {
 		 * 管理首页
 		 * */
 		$memberCount = model('Member')->count();
-		$orderCount = model('Order')->where(['c_status' => 1])->count();
+		$orderCount = model('Order')->count();
 		$this->assign([
 			'title' => '管理首页',
 			'memberCount' => $memberCount,

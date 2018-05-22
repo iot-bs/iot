@@ -69,9 +69,6 @@
                                 <th>金额</th>
                                 <th>下单时间</th>
                                 <th>支付状态</th>
-                                <th>订单状态</th>
-                                <th>开始充电时间</th>
-                                <th>结束充电时间</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -101,31 +98,8 @@
                                     <span style="color:#2bf32b;">已支付</span>
                                     {/if}
                                 </td>
-                                <td>
-                                    {if condition="$v['c_status'] eq 0"}
-                                    <span style="color:red;">未开始</span>
-                                    {elseif condition="$v['c_status'] eq 1" /}
-                                    <span style="color:#2bf32b;">使用中</span>
-                                    {else /}
-                                    <span style="color:#2bf32b;">已结束</span>
-                                    {/if}
-                                </td>
-                                <td>
-                                    {if condition="$v['c_start_time'] eq 0"}
-                                    <span style="color:red;">未开始</span>
-                                    {else /}
-                                    {$v.c_start_time}
-                                    {/if}
-                                </td>
-                                <td>
-                                    {if condition="$v['c_stop_time'] eq 0"}
-                                    <span style="color:red;">未结束</span>
-                                    {else /}
-                                    {$v.c_shop_time}
-                                    {/if}
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs btn-info" onclick="o2o_open('电压数据','{:url('Monitor/voltage',['devicesn'=>1])}',1000,750);" data-toggle="modal" data-target="#catorderinfo" data-order-id="{$v.c_id}" title="订单详情">
+                                      <td>
+                                    <a class="btn btn-xs btn-info" onclick="o2o_open('充电状态','{:url('Order/orderStatus',['id' => $v.c_id])}',1000,600);"  data-order-id="" title="订单详情">
                                         <i class="fa fa-file-code-o"></i>
                                     </a>
                                     <if condition="$v['c_type'] eq 2">

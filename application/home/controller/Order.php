@@ -9,6 +9,8 @@
 namespace app\home\controller;
 
 
+use think\Validate;
+
 class Order extends Base
 {
     public $obj;
@@ -19,7 +21,7 @@ class Order extends Base
     }
     /**
      * $cart =
-     * {"c_uid": "4", 用户id
+     * {"c_user_id": "4", 用户id
     "c_deviceid: "19", 设备id
     "c_charge_id": "5", 充电时间id
     "c_charge_time": "1", 充电时间
@@ -29,6 +31,32 @@ class Order extends Base
     }
      */
     //加入购物车
+    public function order()
+    {
+        if(request()->isPost())
+        {
+            $data = input('post.');
+            $validate = validate('Order');
+            $res = $validate->scene('checkPost')->check($data);
+            if(!$res)
+            {
+                return json(['stats' => 0, 'msg' => $validate->getError()]);
+            }
+            $postData['c_deviceid'] = $data['c_deviceid'];
+            $postData['c_user_id'] = $data['c_user_id'];
+            $postData['c_charge_id'] = $data['c_charge_id'];
+
+
+
+
+        }
+        return json([
+            'status' => 0,
+            'msg' => '非法请求'
+        ]);
+
+
+    }
     public function addcart()
     {
         if (request()->isPost()) {
@@ -61,7 +89,7 @@ class Order extends Base
             $where['c_merchant_id'] = $data['c_merchant_id'];
             $where['c_isdel'] =1;
             $where['c_status'] =1;
-            $res = $model->where($where)->field('c_id,c_num')->find();
+            $res = $this->obj->where($where)->field('c_id,c_num')->find();
             if ($res !== null) {
                 $parm['c_num'] = $res['c_num'] + $data['c_num'];
                 $parm['c_update_time'] = time();

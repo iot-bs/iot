@@ -171,7 +171,7 @@ class Device extends Base {
         ]);
     }
 	/**
-	 * 添加渲染
+	 * 添加设备
 	 */
 	public function add() {
 		if (request()->isPost()) {
@@ -189,6 +189,7 @@ class Device extends Base {
 				$res = Service::getInstance()->call('Device::addDevice', $data)->getResult(10);
 				if ($res) {
 					$deviceID = $res;
+					$this->addInit($res);
 					// 当前域名
 					$DomainName = 'http://' . $_SERVER['SERVER_NAME'];
 					$qrUrl = $DomainName . url('app/home/Wechat/entry', ['deviceId' => $deviceID]);
@@ -233,6 +234,18 @@ class Device extends Base {
 			'title' => '添加设备',
 		]);
 	}
+	public function addInit($id)
+    {
+        $res = $this->device->get(['c_deviceid' => $id]);
+        $data['c_devicesn'] = $res['c_devicesn'];
+        $data['c_currentcon'] = serialize(config('device.initCurrent'));
+        $data['c_vdccon'] = serialize(config('device.initVdc'));
+        $data['c_tempcon'] = serialize(config('device.initTemp'));
+        $data['c_heartbeat'] = config('device.initHeartbeat');
+        $data['c_status'] = 0;
+        db('SafeLimit')->insert($data);
+
+    }
 	public function csCode() {
 		// 二维码链接
 		//$qrUrl = 'http://'.$_SERVER['SERVER_NAME'].'/Home/Wechat/entry?c_staffid=1';

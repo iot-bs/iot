@@ -22,10 +22,9 @@
 </style>
 <body class="page-body">
 <div class="page-container">
-    <div class="sidebar-menu toggle-others fixed">
-    </div>
-    <div class="main-content">
 
+    <div class="main-content">
+        <!-- User Info, Notifications and Menu Bar -->
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
@@ -34,102 +33,56 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>订单编号</th>
-                                <th>用户昵称</th>
-                                <th>租用设备</th>
-                                <th>设备类型</th>
+                                <th>设备编号</th>
                                 <th>充电时间</th>
-                                <th>金额</th>
-                                <th>下单时间</th>
-                                <th>支付状态</th>
-                                <th>订单状态</th>
-                                <th>开始充电时间</th>
-                                <th>结束充电时间</th>
-                                <th>操作</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>剩余时间</th>
+                                <th>充电状态</th>
                             </tr>
                             </thead>
+
                             <tbody>
-                            {volist name="list" id="v" key="k"}
-                            <tr>
-                                <td>{$v.c_id}</td>
-                                <td>{$v.c_sn}</td>
-                                <td>{$v.users.c_nickname}/{$v.c_user_id}</td>
-                                <td>{$v.devices.c_name}</td>
-                                <td>
-                                    {if condition="$v['c_type'] eq 1"}
-                                    零时租用
-                                    {elseif condition="$v['c_type'] eq 2" /}
-                                    带走租用
-                                    {else /}
-                                    未知
-                                    {/if}
-                                </td>
-                                <td>{$v.c_charge_time}/小时</td>
-                                <td>{$v.c_total_price}</td>
-                                <td>{$v.devices.c_add_time}</td>
-                                <td>
-                                    {if condition="$v['c_pay_status'] eq 0"}
-                                    <span style="color:red;">未支付</span>
-                                    {else /}
-                                    <span style="color:#2bf32b;">已支付</span>
-                                    {/if}
-                                </td>
-                                <td>
-                                    {if condition="$v['c_status'] eq 0"}
-                                    <span style="color:red;">未开始</span>
-                                    {elseif condition="$v['c_status'] eq 1" /}
-                                    <span style="color:#2bf32b;">使用中</span>
-                                    {else /}
-                                    <span style="color:#2bf32b;">已结束</span>
-                                    {/if}
-                                </td>
-                                <td>
-                                    {if condition="$v['c_start_time'] eq 0"}
-                                    <span style="color:red;">未开始</span>
-                                    {else /}
-                                    {$v.c_start_time}
-                                    {/if}
-                                </td>
-                                <td>
-                                    {if condition="$v['c_stop_time'] eq 0"}
-                                    <span style="color:red;">未结束</span>
-                                    {else /}
-                                    {$v.c_shop_time}
-                                    {/if}
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#catorderinfo" data-order-id="{$v.c_id}" title="订单详情">
-                                        <i class="fa fa-file-code-o"></i>
-                                    </a>
-                                    <if condition="$v['c_type'] eq 2">
-                                        <a  data-toggle="modal" data-target="#audit"  class="btn btn-xs btn-info" data-key="{$k-1}" title="资料认证">
-                                            <i class="fa fa-info-circle"></i>
-                                        </a>
-                                    </if>
-                                    <a href="javascript:void(0)" title="删除" id="remove" c_id="{$v.c_id}" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash-o"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            {volist name="list" id="v"}
+                                <tr>
+                                    <td>
+                                        {$v.c_id}
+                                    </td>
+                                    <td>{$v.c_device_id}</td>
+                                    <td>
+                                        {$v.c_charge_time}
+                                    </td>
+                                    <td>
+                                        {if condition="$v['c_status'] eq 0"}
+                                        <span style="color:red;">未开始</span>
+                                        {elseif condition="$v['c_status'] eq 1" /}
+                                        <span style="color:#2bf32b;">使用中</span>
+                                        {else /}
+                                        <span style="color:#2bf32b;">已结束</span>
+                                        {/if}
+                                    </td>
+                                    <td>
+                                        {if condition="$v['c_start_time'] eq 0"}
+                                        <span style="color:red;">未开始</span>
+                                        {else /}
+                                        {$v.c_start_time}
+                                        {/if}
+                                    </td>
+                                    <td>
+                                        {if condition="$v['c_stop_time'] eq 0"}
+                                        <span style="color:red;">未结束</span>
+                                        {else /}
+                                        {$v.c_shop_time}
+                                        {/if}
+                                    </td>
+                                    <td>
+                                        {$v.c_status}
+                                    </td>
+                                </tr>
                             {/volist}
-                            {if condition="!$list"}
-                            <tr>
-                                <td colspan="22">
-                                    暂无记录
-                                </td>
-                            </tr>
-                            {/if}
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
-                                    <ul class="pagination">
-                                        {:pagination($list)}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -137,14 +90,45 @@
     </div>
 </div>
 
-
-
-
 {include file="public/foot"/}
 <!-- layer 插件 -->
 <script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
 <script type="text/javascript">
     $(function () {
+        //点击删除
+        $(document).on("click","#remove",function () {
+            if(confirm('您确定要删除吗？')){
+                //实现删除业务逻辑
+                $.get("{:url('Device/del')}",
+                    {id:$(this).attr("c_id")},
+                    function (data) {
+                        if(data.status == 0){
+                            layer.msg(data.msg,{icon:1,time: 1000},function () {
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(data.msg,{icon:2,time: 1000});
+                        }
+                    },'json');
+            }
+        });
+
+        //点击修改状态
+        $(document).on("click","#isStatus",function () {
+
+            $.get("{:url('Device/isStatus')}",
+                {id:$(this).attr("c_id")},
+                function (data) {
+                    if(data.status == 0){
+                        layer.msg(data.msg,{icon:1,time: 1000},function () {
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg(data.msg,{icon:2,time: 1000});
+                    }
+                },'json');
+        });
+
         // 图片放大
         var zindex=1;
         $(".lemoncode").click(function(){
@@ -164,45 +148,6 @@
         })
     })
 </script>
-<script type="text/javascript" src="__STATIC__/js/layer/layer.js"></script>
-<script type="text/javascript">
-    $(function () {
-        //点击删除
-        $(document).on("click","#remove",function () {
-            if(confirm('您确定要删除吗？')){
-                //实现删除业务逻辑
-                $.get("{:url('Order/del')}",
-                    {id:$(this).attr("c_id")},
-                    function (data) {
-                        if(data.status == 0){
-                            layer.msg(data.msg,{icon:1,time: 1000},function () {
-                                location.reload();
-                            });
-                        }else{
-                            layer.msg(data.msg,{icon:2,time: 1000});
-                        }
-                    },'json');
-            }
-        });
 
-        //点击充值
-        $(document).on("click","#Charege",function () {
-            if(confirm('您确定要充值吗？')){
-                //实现删除业务逻辑
-                $.get("{:url('Order/yhVipCharege')}",
-                    {id:$(this).attr("c_id")},
-                    function (data) {
-                        if(data.status == 0){
-                            layer.msg(data.msg,{icon:1,time: 1000},function () {
-                                location.reload();
-                            });
-                        }else{
-                            layer.msg(data.msg,{icon:2,time: 1000});
-                        }
-                    },'json');
-            }
-        });
-    })
-</script>
 </body>
 </html>

@@ -3,8 +3,10 @@ namespace app\admin\controller;
 
 class Order extends Base {
 	public $order;
+	public $orderStatus;
 	public function initialize() {
 		$this->order = model("Order");
+		$this->orderStatus = model('OrderStatus');
 		$this->type = config('device.deviceType');
 	}
 	/**
@@ -30,6 +32,24 @@ class Order extends Base {
 		]);
 		return $this->fetch();
 	}
+	/*
+	 * 订单状态表
+	 */
+	public function orderStatus()
+    {
+        if(request()->isGet()){
+            $orderId = input('get.id');
+            if(empty($orderId)){
+                $this->error('缺少订单id');
+            }
+            $list = $this->orderStatus->getOrderStatus(['c_order_id' => $orderId]);
+            return $this->fetch('',[
+                'title' => '充电状态',
+                'list' => $list,
+            ]);
+        }
+        $this->error('非法请求');
+    }
 	/**
 	 * 订单详情
 	 * @return xmind

@@ -88,3 +88,10 @@ function doCurl($url,$type=0,$data=[]){
 
 
 }
+function show($status,$message='',$data=[]){
+    return json([
+        'status'=>intval($status),
+        'message'=>$message,
+        'data'=>$data,
+    ]);
+}

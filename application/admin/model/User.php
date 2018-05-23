@@ -4,16 +4,14 @@ use think\Model;
 
 class User extends Model {
 
-	protected $_validate = array(
-		array('c_username', 'require', '姓名不得为空', '', 1),
-		array('c_sex', 'require', '性别不得为空', '', 1),
-		array('c_tel', 'require', '电话不得为空', '', 1),
-		array('c_address', 'require', '地址不得为空', '', 1),
-		array('c_health_id', 'require', '健康师不得为空', '', 1),
-	);
-
+    protected $pk = 'c_id';
 	public $expires = array('一个月', '两个月', '三个月', '四个月', '五个月', '六个月', '七个月', '八个月', '九个月', '十个月', '十一个月', '十二个月', '两年');
-
+    //根据id获取用户信息
+	public function getUserById($id)
+    {
+        $res = $this->get($id);
+        return $res;
+    }
 	/**
 	 * 充值回调
 	 * @return minxd

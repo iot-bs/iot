@@ -4,7 +4,7 @@ namespace app\admin\model;
 use think\Model;
 
 class Device extends Model {
-
+    protected $pk = 'c_deviceid';
 	/**
 	 * @Author   liuxiaodong
 	 * @DateTime 2018-04-03
@@ -18,9 +18,16 @@ class Device extends Model {
 			->order($order)
 			->paginate($limit);
 	}
-	public function doUpdate($where, $id) {
+	public function doUpdate($where, $id)
+    {
 		return $this->where($id)->update($where);
 	}
+	//通过id获取device
+    public function getDeviceById($id)
+    {
+	    $res = $this->get($id);
+	    return $res;
+    }
 
 }
 

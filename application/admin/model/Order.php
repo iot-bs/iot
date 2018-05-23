@@ -5,6 +5,7 @@ use think\Model;
 
 class Order extends Model
 {
+    protected $pk = 'c_id';
     //订单外键 c_order_sn 对应device表 c_devicesn  设备编号作为外键
     public function devices()
     {

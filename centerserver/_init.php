@@ -28,14 +28,19 @@ function getRunPath() {
 
 const LOAD_SIZE = 8192; //最多载入任务数量
 const TASKS_SIZE = 1024; //同时运行任务最大数量
+const DEVICES_SIZE = 1024; //监控的设备最大数量
 const MONITOR_SIZE = 1024; //同时运行监控任务最大数量
 const ROBOT_MAX = 128; //同时挂载worker数量
 const WORKER_NUM = 4; //worker进程数量
 const TASK_NUM = 4; //task进程数量
 
 define("CENTRE_PORT", 8901);
+define("REDIS_HOST","127.0.0.1");
+define("REDIS_PORT",6379);
+define("OUT_TIME",1200);
 define('DEBUG', 'on');
 define("CENTER_HOST", "127.0.0.1");
+define("WARNID","A7Y9n6naXo4ngG2cYD6VMmwnndD6E53UGaoyoeFbQ18");//告警模板id
 $env = 'dev';
 define('ENV_NAME', $env);
 define('PUBLIC_PATH', '/website/iot/centerserver/');

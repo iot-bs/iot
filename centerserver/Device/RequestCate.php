@@ -7,7 +7,7 @@ use Lib\Client;
 class RequestCate {
 	//判断请求的类型l
 	public static function requestControl($data) {
-		echo "Device ------ RequestCate ----------requestControl\n" . PHP_EOL;
+//		echo "Device ------ RequestCate ----------requestControl\n" . PHP_EOL;
 		print_r($data['RequestControl']);
 		if ($data['RequestControl'] != '1') {
 			echo "checktoken" . PHP_EOL;

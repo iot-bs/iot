@@ -31,8 +31,8 @@ private $data = [
                 "Vdc"=>[["Type"=>"DC","Value"=>"4","No"=>"1"],["Type"=>"AC","Value"=>"4","No"=>"2"]],
                 "Current"=>[["Type"=>"DC","Value"=>"4","No"=>"1"],["Type"=>"AC","Value"=>"4","No"=>"2"]],
                 "Temp"=>"40",
-                "Lng"=>"135.2342342",
-                "Lat"=>"23.9978979",
+                "Lng"=>"106.505493",
+                "Lat"=>"29.540804",
                 "ConnectType"=>"gprs"
                 ];
     public function __construct(){
@@ -114,6 +114,15 @@ private $data = [
         $a = substr($data, 16);
         $b = json_decode($a);
         print_r($b);
+        while(true)
+        {
+            $data = $this->data;
+            $data['RequestControl'] = '4';
+            $cli->send($this->data($data));
+            sleep(40);
+        }
+
+
 //        print_r($b);
         // if(isset($b['Relay']))
         // {

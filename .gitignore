@@ -1,11 +1,3 @@
-.phpintel 
-.idea
-runtime
-public/charge
-swoole_crontab.sql
-vendor
-backup
-public/upload
-centerserver/logs
-centerserver/logs/application.log
-public/admin/qrcode
+runtime/
+centerserver/logs/
+config

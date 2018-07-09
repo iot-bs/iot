@@ -171,10 +171,10 @@ class Robot {
 	public static function unRegister($fd) {
 		echo "Lib ------ Robot ----------unRegister\n" . PHP_EOL;
 		foreach (self::$table as $devicesn => $value) {
-			print_r($devicesn);
-			print_r($value);
 			echo 'fd == '; print_r($fd);
 			if ($value["fd"] == $fd) {
+                print_r($devicesn);
+                print_r($fd);
 				Monitor::unRegister($devicesn);
 				return self::$table->del($devicesn);
 			}

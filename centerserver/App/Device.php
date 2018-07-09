@@ -7,9 +7,52 @@
 namespace App;
 use Lib;
 use model\Device as DbDevice;
+use Table\SafeLimit;
+use Table\Warning;
 
 class Device {
+    /**
+     * 内存表测试
+     */
+    public static function test()
+    {
+        $monitor = [];
+        foreach (Lib\Monitor::$table as $k => $v)
+        {
+            $monitor[$k] = $v;
+        }
+        $task = [];
+        foreach (Lib\Tasks::$table as $k => $v)
+        {
+            $task[$k] = $v;
+        }
+        $robot = [];
+        foreach (Lib\Robot::$table as $k => $v)
+        {
+            $robot[$k] = $v;
+        }
+        $safe = [];
+        foreach (SafeLimit::$table as $k => $v)
+        {
+            $safe[$k] = $v;
+        }
+        $warning = [];
+        foreach (Warning::$table as $k => $v) {
+            $warning[$k] = $v;
+        }
+        return ['Monitor' => $monitor ,'Task' =>$task ,'Robot' => $robot, 'SafeLimit' =>$safe,'heartbeat' => Lib\CenterServer::$_server->heartbeat(false),'warning' => $warning];
 
+    }
+    //    根据设备编号获取设备
+    public static  function getDeviceBySn($sn)
+    {
+        if($sn)
+        {
+            return false;
+        }
+        $res = Lib\Robot::$table->get($sn);
+        return $res;
+    }
 	/**
 	 * 获取设备
 	 * @return array
@@ -21,8 +64,40 @@ class Device {
 		    $res[$k] = $v;
         }
         return $res;
-}
+    }
 
+    /**
+     * 微信端获取在线实时的设备
+     */
+    public static function getDevicesFromClient()
+    {
+        $allDeviceStatus = Lib\Robot::$table;
+        $devices = [];
+        foreach($allDeviceStatus as $k => $v){
+            $devices[$k] = $v;
+        }
+        $list =  Lib\Monitor::$table;
+        $monitors = [];
+        foreach ($list as $k => $v) {
+            $monitors[$k] = $v;
+        }
+        return ['deviceStatus' => $devices,'monitorStatus' => $monitors];
+    }
+
+    /**
+     * 微信根据设备id获取在线设备详细信息
+     * @param $sn
+     * @return array|bool
+     */
+    public static function getMonitorBySn($sn)
+    {
+        if(empty($sn))
+        {
+            return false;
+        }
+        $device =  Lib\Monitor::$table->get($sn);
+        return $device;
+    }
 
 	/**
 	 * 添加任务

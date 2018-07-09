@@ -14,7 +14,39 @@ use Lib\Client;
 use Lib\Util;
 
 class Control {
-
+    /**
+     * @param $sn
+     * @param $relay
+     * 租用设备 控制开关
+     */
+    public function rentControl($sn,$relay)
+    {
+        $res = false;
+        //判断是开合关
+        if($relay == '0')
+        {
+            $res = Tasks::$table->set($sn,['No' => 'all','Value' => 'all' ,'Type' => 'all']);
+        }else if($relay == '1')
+        {
+            $res = Tasks::$table->set($sn,['No' => 'on','Value' => 'on' ,'Type' => 'on']);
+        }
+        return $res;
+    }
+    /**
+     * 开启充电
+     */
+    public static function startCharge($device,$type)
+    {
+        Tasks::$table->set($device['c_devicesn'],['No' => $type+1,'Value' => '1','Type' => 'one']);
+    }
+    /**
+     * @param $sn 设备编号
+     * 扫码 打开继电器
+     */
+    public static function openRelayByScan($sn)
+    {
+        Tasks::$table->set($sn,['No' => '1','Value' => '1' ,'Type' => 'one']);
+    }
     /**
 	 * 获取代理服务器
 	 * @return array

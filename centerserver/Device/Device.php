@@ -20,14 +20,14 @@ class Device
 
     //初始连接
 	public function initConnect($data) {
-		echo "Device ------ Device ----------initConnect\n" . PHP_EOL;
+//		echo "Device ------ Device ----------initConnect\n" . PHP_EOL;
 		if (Robot::register($data['fd'], $data['DeviceSn']) && Monitor::updateMonitor($data)) {
 			return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
 
 		} else {
 			return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
 		}
-		echo "endDevice ------ Device ----------initConnect\n" . PHP_EOL;
+//		echo "endDevice ------ Device ----------initConnect\n" . PHP_EOL;
 	}
 	//心跳设置状态
 	public function heartbeatSet($data) {
@@ -91,7 +91,7 @@ class Device
     }
     //温度设置状态
     public function tempSet($data) {
-        echo "Device ------ Device ----------tempSet\n" . PHP_EOL;
+//        echo "Device ------ Device ----------tempSet\n" . PHP_EOL;
         self::$tableSafeLimit->updateSafeLimit($data);
         if(!\Table\SafeLimit::updateSafeLimit($data)){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '0']);
@@ -100,7 +100,7 @@ class Device
     }
     //获取设备安全阈值
     public function getSafeLimit($data){
-	    echo "-----------------anquan ceshio yuzhi ---".PHP_EOL;
+//	    echo "-----------------anquan ceshio yuzhi ---".PHP_EOL;
         $res = self::$tableSafeLimit->getSafeLimit($data['DeviceSn'],'c_devicesn');
          $msg = Util::msg('13',['DeviceSn' =>$data['DeviceSn'],'VdcConArray' => unserialize($res['c_vdccon']),'TempConArray' => unserialize($res['c_tempcon']),'CurrentConArray' => unserialize($res['c_currentcon']),'Heartbeat' => $res['c_heartbeat'],'RequestStatus' => '1']);
          return $msg;
@@ -108,7 +108,7 @@ class Device
     }
     //安全警报
     public function warnSet($data){
-	    $res = self::$tableWarning->insertWarnData($data);
+	    $res = \Table\Warning::updateWarning($data);
 	    if($res){
             return Util::msg('1',['DeviceSn' => $data['DeviceSn'],'RequestStatus' => '1']);
         }

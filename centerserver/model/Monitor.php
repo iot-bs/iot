@@ -50,7 +50,7 @@ class Monitor
 		return $this->table->set($id,$data,$where);
 	}
 	public function insertMonitor($data){
-	    echo "insert model monitor  ----------".PHP_EOL;
+//	    echo "insert model monitor  ----------".PHP_EOL;
 	    $data['create_time'] = time();
 	    try{
             $this->table->put($data);;

@@ -35,8 +35,11 @@ class Monitor
 		return ['deviceStatus' => $devices,'monitorStatus' => $monitors];
 	}
     public static function getMonitor($devicesn){
-        return $monitor = Lib\Monitor::$table->get($devicesn);
+        return Lib\Monitor::$table->get($devicesn);
     }
 
-
+    public static function getWarns($devicesn)
+    {
+        return \Table\Warning::$table->get($devicesn);
+    }
 }

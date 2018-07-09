@@ -45,7 +45,7 @@ class Monitor {
      * @return bool
      */
     public static function updateMonitor($data){
-        echo "Lib ------ Monitor ----------updateMonitor\n" . PHP_EOL;       
+//        echo "Lib ------ Monitor ----------updateMonitor\n" . PHP_EOL;
         $table['c_devicesn'] = $data['DeviceSn'];
         $table['c_voltage'] = serialize($data['Vdc']);
         $table['c_current'] = serialize($data['Current']);

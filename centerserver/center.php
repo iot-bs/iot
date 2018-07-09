@@ -24,8 +24,8 @@ Swoole\Network\Server::start(function ($opt) {
 		'open_length_check' => 1,
 		'package_max_length' => $AppSvr->packet_maxlen,
 		'socket_buffer_size' => 9000000000,
-//        'heartbeat_idle_time' => 60,
-//        'heartbeat_check_interval' => 20,
+        'heartbeat_idle_time' => 120,
+        'heartbeat_check_interval' => 20,
 		'package_length_type' => 'N',
 		'package_body_offset' => \Swoole\Protocol\SOAServer::HEADER_SIZE,
 		'package_length_offset' => 0,
@@ -38,6 +38,7 @@ Swoole\Network\Server::start(function ($opt) {
 	\Lib\Monitor::init(); //创建监控状态表
 	\Lib\Robot::init(); //创建任务处理服务表
     \Table\SafeLimit::init();//创建安全上下限表
+    \Table\Warning::init();//创建警报内存表
 	Swoole::$php->db->close();
 	$host = CENTER_HOST;
 	$port = CENTRE_PORT;

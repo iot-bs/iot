@@ -64,6 +64,7 @@ class Warning
         }
         $save['c_time'] = time();
         $res = $this->table->put($save);
+        echo $res;
         return $res;
     }
 }

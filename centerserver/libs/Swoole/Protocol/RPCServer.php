@@ -88,8 +88,8 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
 
     function onReceive($serv, $fd, $reactor_id, $data)
     {
-        echo "onReceive ---------------------------------".PHP_EOL;
-        print_r(strlen($data));
+//        echo "onReceive ---------------------------------".PHP_EOL;
+//        print_r(strlen($data));
         if (!isset($this->_buffer[$fd]) or $this->_buffer[$fd] === '')
         {
             //超过buffer区的最大长度了
@@ -110,7 +110,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
             }
             //解析包头
             $header = unpack(self::HEADER_STRUCT, substr($data, 0, self::HEADER_SIZE));
-            print_r($header);
+//            print_r($header);
             //错误的包头
             if ($header === false)
             {
@@ -139,7 +139,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
 
         //数据解包
         $request = self::decode($this->_buffer[$fd], $this->_headers[$fd]['type']);
-        print_r($request);
+//        print_r($request);
         if ($request === false)
         {
             $this->sendErrorMessage($fd, self::ERR_UNPACK);
@@ -207,7 +207,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static function encode($data, $type = self::DECODE_PHP, $uid = 0, $serid = 0)
     {
-        echo 'encode---------------------------data'.PHP_EOL;
+//        echo 'encode---------------------------data'.PHP_EOL;
         //启用压缩
         if ($type & self::DECODE_GZIP)
         {
@@ -250,7 +250,7 @@ class RPCServer extends Base implements Swoole\IFace\Protocol
      */
     static function decode($data, $unseralize_type = self::DECODE_PHP)
     {
-        echo "decode ----------------------------------------data".PHP_EOL;
+//        echo "decode ----------------------------------------data".PHP_EOL;
         if ($unseralize_type & self::DECODE_GZIP)
         {
             $unseralize_type &= ~self::DECODE_GZIP;
